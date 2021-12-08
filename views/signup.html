@@ -8,14 +8,20 @@
       name="google-signin-client_id"
       content="1035291009066-oqnn8iut0016eq5r7bqmf3pouck3b0j3.apps.googleusercontent.com"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Filled|"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css" />
-    <link rel="stylesheet" href="./styles/authentications.css" />
+    <link rel="stylesheet" href="styles/authentications.css" />
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <title>iDiary | Login</title>
+    <title>iDiary | Sign Up</title>
   </head>
   <body>
     <div class="l-app">
@@ -108,23 +114,40 @@
             "
           >
             <h2 class="c-header c-header--xx-large c-header--margin-bottom">
-              Hello there!
+              Sign Up
             </h2>
             <p class="c-text c-text--neutral-500">
-              Welcome to iDiary, login to access your diary.
+              Welcome to iDiary, let's get you started.
             </p>
           </div>
           <div class="c-authenticate__container">
             <form action="#" method="POST" class="c-form">
+              <div class="c-form__innerwrap c-form__innerwrap--row">
+                <input
+                  type="text"
+                  id="first-name"
+                  name="first-name"
+                  required="true"
+                  placeholder="First Name"
+                  class="c-form__input c-form__input--margin-right"
+                />
+                <input
+                  type="text"
+                  id="last-name"
+                  name="last-name"
+                  required="true"
+                  placeholder="Last Name"
+                  class="c-form__input c-form__input--margin-left"
+                />
+              </div>
               <div class="c-form__innerwrap">
                 <input
                   type="email"
-                  id="email"
-                  name="email"
+                  id="e-mail"
+                  name="e-mail"
                   required="true"
                   placeholder="E-mail"
                   class="c-form__input"
-                  autocomplete="off"
                 />
               </div>
               <div class="c-form__innerwrap">
@@ -137,48 +160,34 @@
                   class="c-form__input"
                 />
               </div>
+              <div class="c-form__innerwrap">
+                <input
+                  type="password"
+                  id="password-re-enter"
+                  name="password-re-enter"
+                  required="true"
+                  placeholder="Re-enter password"
+                  class="c-form__input"
+                />
+              </div>
               <div
                 class="c-form__innerwrap c-form__innerwrap--centered-content"
               >
                 <button type="submit" class="c-button c-button--width-100">
-                  Login
+                  Sign up
                 </button>
               </div>
             </form>
           </div>
-          <div
-            class="
-              c-authenticate__container
-              c-authenticate__container--centered-content
-            "
-          >
-            <p class="c-text c-text--neutral-600 c-text--small">Or you can</p>
-          </div>
-          <div
-            class="
-              c-authenticate__container
-              c-authenticate__container--centered-content
-            "
-          >
-            <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
-            <div class="c-gplus-sign-in" data-onsuccess="onSignIn">
-              <img
-                class="c-gplus-sign-in__icon"
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                alt="Google Icon"
-              />
-              <p class="c-gplus-sign-in__text">Sign-in with Google</p>
-            </div>
-          </div>
           <div class="c-authenticate__container">
             <p class="c-text">
-              Don't have an account?
-              <a href="./signup.html" class="c-text__link">Sign Up</a>
+              Already have an account?
+              <a href="/login" class="c-text__link">Log in</a>
             </p>
           </div>
         </div>
       </div>
     </div>
-    <script src="scripts/script.js"></script>
+    <!-- <script src="scripts/script.js"></script> -->
   </body>
 </html>
