@@ -1,0 +1,73 @@
+@use "../variables/variables" as v;
+
+//logo
+.c-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  // justify-self: center;
+
+  &__image {
+    width: 24px;
+    height: 24px;
+
+    &--visual {
+      width: 200px;
+      height: 200px;
+    }
+
+    &--medium {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  &__element {
+    &--blue-primary-500 {
+      fill: v.$blue-primary-500;
+    }
+
+    &--blue-primary-900 {
+      fill: v.$blue-primary-900;
+    }
+
+    &--green-secondary-500 {
+      fill: v.$green-secondary-500;
+    }
+
+    &--green-secondary-900 {
+      fill: v.$green-secondary-900;
+    }
+
+    &--white {
+      fill: white;
+    }
+  }
+
+  &__appname {
+    display: none;
+    color: v.$neutral-500;
+    font-size: v.$large;
+    margin-left: 0.5rem;
+
+    &--white {
+      color: white;
+    }
+
+    @media screen and (min-width: 350px) {
+      display: block;
+    }
+  }
+
+  &--visual {
+    // display: none;
+    position: absolute;
+    top: calc(-90px - clamp(30px, 8vw, 40px));
+    right: calc(-30px - clamp(30px, 8vw, 40px));
+    z-index: 0;
+
+    // @media screen and (min-width: v.$laptop) {
+    //   right: calc(-30px - clamp(150px, 8vw, 210px));
+    // }
+  }
+}

@@ -1,0 +1,176 @@
+@use "../variables/variables" as v;
+
+//header
+.c-header {
+  color: v.$neutral-100;
+
+  &--small {
+    font-size: v.$small;
+  }
+
+  &--large {
+    font-size: v.$large;
+  }
+
+  &--xx-large {
+    font-size: v.$xx-large;
+  }
+
+  &--fluid-xx-large {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  &--fluid-large {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  &--fluid-medium {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  &--fluid-small {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  &--margin-bottom {
+    margin-bottom: 0.5rem;
+  }
+
+  &--margin-top {
+    margin-top: 1rem;
+  }
+
+  &__name {
+    color: v.$blue-primary-500;
+  }
+
+  &--italic {
+    font-style: italic;
+  }
+
+  &--white {
+    color: white;
+  }
+
+  &--neutral-500 {
+    color: v.$neutral-500;
+  }
+
+  &--neutral-600 {
+    color: v.$neutral-600;
+  }
+
+  &--neutral-700 {
+    color: v.$neutral-700;
+  }
+
+  &--neutral-800 {
+    color: v.$neutral-800;
+  }
+
+  &--neutral-900 {
+    color: v.$neutral-900;
+  }
+
+  &--blue-primary-500 {
+    color: v.$blue-primary-500;
+  }
+
+  &--green-secondary-500 {
+    color: v.$green-secondary-500;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  &--shadow {
+    text-shadow: v.$short-shadow-neutral-600;
+  }
+}
+
+//text
+.c-text {
+  color: v.$neutral-100;
+  &__link {
+    font-weight: 700;
+    color: v.$blue-secondary-500;
+  }
+
+  &--margin-bottom {
+    margin-bottom: 0.5rem;
+  }
+
+  &--margin-top {
+    margin-top: 0.5rem;
+  }
+
+  &--fluid-large {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  &--fluid-medium {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  &--fluid-small {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  &--small {
+    font-size: v.$small;
+  }
+
+  &--large {
+    font-size: v.$large;
+  }
+
+  &--x-large {
+    font-size: v.$x-large;
+  }
+
+  &--xx-large {
+    font-size: v.$xx-large;
+  }
+
+  &--italic {
+    font-style: italic;
+  }
+
+  &--thin {
+    font-weight: 300;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  //colors
+  &--neutral-500 {
+    color: v.$neutral-500;
+  }
+
+  &--neutral-600 {
+    color: v.$neutral-600;
+  }
+
+  &--neutral-900 {
+    color: v.$neutral-900;
+  }
+
+  &--green-secondary-500 {
+    color: v.$green-secondary-500;
+  }
+
+  &--blue-primary-500 {
+    color: v.$blue-primary-500;
+  }
+
+  &--white {
+    color: white;
+  }
+}

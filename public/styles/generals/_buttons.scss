@@ -1,0 +1,104 @@
+@use "../variables/variables" as v;
+
+.c-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75em 1.5em;
+  background-color: v.$blue-secondary-500;
+  color: white;
+  border: none;
+  border-radius: v.$border-radius;
+  cursor: pointer;
+  // font-family: v.$header-font;
+  transition: transform v.$anim-duration ease,
+    background-color v.$anim-duration ease, box-shadow v.$anim-duration ease,
+    color v.$anim-duration ease, v.$anim-duration text-shadow ease,
+    border-radius v.$anim-duration ease;
+  // box-shadow: v.$short-shadow-blue-secondary-500;
+
+  &__icon {
+    &--font-36 {
+      font-size: 36px;
+    }
+  }
+
+  &--height-100 {
+    height: 100%;
+  }
+
+  &--width-100 {
+    width: 100%;
+  }
+
+  &--text-only {
+    background-color: transparent;
+    color: v.$blue-secondary-500;
+    // text-shadow: v.$short-shadow-blue-secondary-500;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  &--text-white {
+    color: white;
+    // text-shadow: v.$short-shadow-neutral-600;
+  }
+
+  &--text-black {
+    color: v.$neutral-100;
+    // text-shadow: v.$short-shadow-neutral-600;
+  }
+
+  &--text-red {
+    color: red;
+    text-shadow: none;
+  }
+
+  &--square {
+    padding: 0.5em;
+    width: 70px;
+    height: 70px;
+  }
+
+  &--circle {
+    padding: 0.5em;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+  }
+
+  &--large {
+    padding: 1em 3em;
+  }
+
+  &--margin-top {
+    margin-top: 1rem;
+  }
+
+  &--margin-left {
+    margin-left: 1rem;
+  }
+
+  &--margin-bottom {
+    margin-bottom: 1rem;
+  }
+
+  &--blue-primary-500 {
+    background-color: v.$blue-primary-500;
+    // box-shadow: v.$short-shadow-blue-primary-500;
+  }
+
+  &--green-secondary-500 {
+    background-color: v.$green-secondary-500;
+    // box-shadow: v.$short-shadow-green-secondary-500;
+  }
+
+  &--rotate {
+    background-color: rgba($color: v.$blue-secondary-500, $alpha: 0);
+    transform: rotate(135deg);
+    color: v.$blue-secondary-500;
+    box-shadow: 0 0 0 transparent;
+    // border-radius: 50%;
+    text-shadow: v.$short-shadow-neutral-600;
+  }
+}

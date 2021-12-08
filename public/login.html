@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="google-signin-client_id"
+      content="1035291009066-oqnn8iut0016eq5r7bqmf3pouck3b0j3.apps.googleusercontent.com"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Filled|"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css" />
+    <link rel="stylesheet" href="./styles/authentications.css" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <title>iDiary | Login</title>
+  </head>
+  <body>
+    <div class="l-app">
+      <div class="l-app__welcome">
+        <div class="c-welcome">
+          <span class="material-icons c-welcome__visual-icon"> article </span>
+          <div class="c-welcome__innerwrap">
+            <h1 class="c-welcome__header">iDiary</h1>
+            <p class="c-welcome__subtext">
+              Write your thoughts, upload moments and save them online with
+              iDiary!
+            </p>
+          </div>
+          <span class="material-icons c-welcome__visual-icon"> image </span>
+        </div>
+      </div>
+      <div class="l-app__topbar">
+        <div class="c-logo">
+          <svg
+            id="diary-icon"
+            class="c-logo__image"
+            width="24"
+            height="24"
+            version="1.1"
+            viewBox="0 0 6.35 6.35"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              id="pen-tip"
+              class="c-logo__element--green-secondary-500"
+              d="m0.87536 4.4715c-0.24174 0-0.46053 0.079521-0.61895 0.20805-0.15842 0.12853-0.25641 0.30607-0.25641 0.5022 0 0.025373 0.0016904 0.050482 0.0048874 0.07517h-0.0048874c0 0.11389 0.03517 0.22777 0.10559 0.31504l0.51563 0.63904c0.14083 0.17454 0.36756 0.17454 0.50839 0l0.51563-0.63903c0.070417-0.08727 0.10559-0.20115 0.10559-0.31504h-0.00489c0.0032-0.024688 0.00489-0.049797 0.00489-0.07517 0-0.19613-0.097991-0.37367-0.25641-0.5022-0.15842-0.12853-0.3773-0.20805-0.61904-0.20805z"
+            />
+            <rect
+              id="pen-body"
+              class="c-logo__element--blue-primary-500"
+              x="-2.9324e-18"
+              y="-5.8648e-18"
+              width="1.7508"
+              height="4.2615"
+              ry=".71025"
+            />
+            <path
+              id="d-shape"
+              class="c-logo__element--blue-primary-500"
+              d="m2.1148 0.65807v5.0338c0 0.38648 0.31315 0.70232 0.69436 0.6531 1.7201-0.22206 3.0879-1.2113 3.458-2.4794 0.10787-0.36958 0.10795-1.0109 1.516e-4 -1.3805-0.36994-1.2684-1.7379-2.2579-3.4582-2.4799-0.38119-0.049211-0.69433 0.26662-0.69433 0.6531z"
+              stroke-width=".99999"
+            />
+          </svg>
+          <h1 class="c-logo__appname">iDiary</h1>
+        </div>
+        <div class="c-logo c-logo--visual">
+          <svg
+            id="diary-icon"
+            class="c-logo__image--visual"
+            width="24"
+            height="24"
+            version="1.1"
+            viewBox="0 0 6.35 6.35"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              id="pen-tip"
+              class="c-logo__element--green-secondary-900"
+              d="m0.87536 4.4715c-0.24174 0-0.46053 0.079521-0.61895 0.20805-0.15842 0.12853-0.25641 0.30607-0.25641 0.5022 0 0.025373 0.0016904 0.050482 0.0048874 0.07517h-0.0048874c0 0.11389 0.03517 0.22777 0.10559 0.31504l0.51563 0.63904c0.14083 0.17454 0.36756 0.17454 0.50839 0l0.51563-0.63903c0.070417-0.08727 0.10559-0.20115 0.10559-0.31504h-0.00489c0.0032-0.024688 0.00489-0.049797 0.00489-0.07517 0-0.19613-0.097991-0.37367-0.25641-0.5022-0.15842-0.12853-0.3773-0.20805-0.61904-0.20805z"
+            />
+            <rect
+              id="pen-body"
+              class="c-logo__element--blue-primary-900"
+              x="-2.9324e-18"
+              y="-5.8648e-18"
+              width="1.7508"
+              height="4.2615"
+              ry=".71025"
+            />
+            <path
+              id="d-shape"
+              class="c-logo__element--blue-primary-900"
+              d="m2.1148 0.65807v5.0338c0 0.38648 0.31315 0.70232 0.69436 0.6531 1.7201-0.22206 3.0879-1.2113 3.458-2.4794 0.10787-0.36958 0.10795-1.0109 1.516e-4 -1.3805-0.36994-1.2684-1.7379-2.2579-3.4582-2.4799-0.38119-0.049211-0.69433 0.26662-0.69433 0.6531z"
+              stroke-width=".99999"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="l-app__authenticate">
+        <div class="c-authenticate">
+          <div
+            class="
+              c-authenticate__container
+              c-authenticate__container--large-margin-top
+            "
+          >
+            <h2 class="c-header c-header--xx-large c-header--margin-bottom">
+              Hello there!
+            </h2>
+            <p class="c-text c-text--neutral-500">
+              Welcome to iDiary, login to access your diary.
+            </p>
+          </div>
+          <div class="c-authenticate__container">
+            <form action="#" method="POST" class="c-form">
+              <div class="c-form__innerwrap">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required="true"
+                  placeholder="E-mail"
+                  class="c-form__input"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="c-form__innerwrap">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required="true"
+                  placeholder="Password"
+                  class="c-form__input"
+                />
+              </div>
+              <div
+                class="c-form__innerwrap c-form__innerwrap--centered-content"
+              >
+                <button type="submit" class="c-button c-button--width-100">
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+          <div
+            class="
+              c-authenticate__container
+              c-authenticate__container--centered-content
+            "
+          >
+            <p class="c-text c-text--neutral-600 c-text--small">Or you can</p>
+          </div>
+          <div
+            class="
+              c-authenticate__container
+              c-authenticate__container--centered-content
+            "
+          >
+            <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+            <div class="c-gplus-sign-in" data-onsuccess="onSignIn">
+              <img
+                class="c-gplus-sign-in__icon"
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                alt="Google Icon"
+              />
+              <p class="c-gplus-sign-in__text">Sign-in with Google</p>
+            </div>
+          </div>
+          <div class="c-authenticate__container">
+            <p class="c-text">
+              Don't have an account?
+              <a href="./signup.html" class="c-text__link">Sign Up</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/script.js"></script>
+  </body>
+</html>

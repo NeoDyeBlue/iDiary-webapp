@@ -1,0 +1,51 @@
+@use "../variables/variables" as v;
+
+.c-form {
+  display: flex;
+  flex-direction: column;
+
+  &__innerwrap {
+    display: flex;
+    margin-bottom: 1.5rem;
+
+    &--centered-content {
+      align-items: center;
+      justify-content: center;
+    }
+
+    &--align-start {
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__input {
+    padding: 0.75em;
+    width: 100%;
+    border-radius: v.$border-radius;
+    background-color: v.$neutral-800;
+    border: 2px solid v.$neutral-800;
+    // box-shadow: v.$short-shadow-neutral-600;
+    // border: 1px solid white;
+    transition: box-shadow v.$anim-duration ease, border v.$anim-duration ease,
+      background-color v.$anim-duration ease;
+
+    &--margin-right {
+      margin-right: 0.5rem;
+    }
+
+    &--margin-left {
+      margin-left: 0.5rem;
+    }
+
+    &:focus {
+      border: 2px solid v.$neutral-600;
+      background-color: white;
+      box-shadow: none;
+    }
+  }
+}

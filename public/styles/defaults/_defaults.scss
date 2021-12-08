@@ -1,0 +1,76 @@
+@use "../variables/variables" as v;
+
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: v.$neutral-200;
+}
+
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+  color: v.$neutral-600;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: v.$neutral-900;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: v.$header-font;
+  font-weight: 700;
+  line-height: 1.5em;
+}
+
+p,
+input {
+  font-family: v.$general-font;
+  font-size: v.$medium;
+  line-height: 1.5em;
+  // font-weight: 500;
+}
+
+span {
+  color: inherit;
+}
+
+input {
+  color: v.$neutral-200;
+  outline: none;
+  border: none;
+}
+
+::placeholder {
+  color: v.$neutral-600;
+}
+
+button {
+  font-family: v.$header-font;
+  font-weight: 700;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  font-weight: 700;
+  font-family: v.$header-font;
+}
+
+.material-icons {
+  user-select: none;
+}

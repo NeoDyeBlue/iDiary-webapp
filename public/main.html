@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Filled|"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css" />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <title>iDiary | Entries</title>
+  </head>
+  <body class="c-body">
+    <div class="l-main">
+      <div class="l-main__topbar">
+        <div class="c-topbar">
+          <!-- <div class="c-search">
+            <div class="c-search__box">
+              <span class="material-icons c-search__icon">search</span>
+            </div>
+          </div> -->
+          <div class="c-logo">
+            <svg
+              id="diary-icon"
+              class="c-logo__image"
+              width="24"
+              height="24"
+              version="1.1"
+              viewBox="0 0 6.35 6.35"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                id="pen-tip"
+                class="c-logo__element--green-secondary-500"
+                d="m0.87536 4.4715c-0.24174 0-0.46053 0.079521-0.61895 0.20805-0.15842 0.12853-0.25641 0.30607-0.25641 0.5022 0 0.025373 0.0016904 0.050482 0.0048874 0.07517h-0.0048874c0 0.11389 0.03517 0.22777 0.10559 0.3604l0.51563 0.63904c0.14083 0.17454 0.36756 0.17454 0.50839 0l0.51563-0.63903c0.070417-0.08727 0.10559-0.20115 0.10559-0.3604h-0.00489c0.0032-0.024688 0.00489-0.049797 0.00489-0.07517 0-0.19613-0.097991-0.37367-0.25641-0.5022-0.15842-0.12853-0.3773-0.20805-0.61904-0.20805z"
+              />
+              <rect
+                id="pen-body"
+                class="c-logo__element--blue-primary-500"
+                x="-2.9324e-18"
+                y="-5.8648e-18"
+                width="1.7508"
+                height="4.2615"
+                ry=".71025"
+              />
+              <path
+                id="d-shape"
+                class="c-logo__element--blue-primary-500"
+                d="m2.1148 0.65807v5.0338c0 0.38648 0.31315 0.70232 0.69436 0.6531 1.7201-0.22206 3.0879-1.2113 3.458-2.4794 0.10787-0.36958 0.10795-1.0109 1.516e-4 -1.3805-0.36994-1.2684-1.7379-2.2579-3.4582-2.4799-0.38119-0.049211-0.69433 0.26662-0.69433 0.6531z"
+                stroke-width=".99999"
+              />
+            </svg>
+            <h1 class="c-logo__appname">iDiary</h1>
+          </div>
+          <div class="c-account-button" id="account-show">
+            <p class="c-text c-account-button__name">John Zoleta</p>
+            <div class="c-account-button__image"></div>
+          </div>
+        </div>
+      </div>
+      <div class="l-main__sidebar">
+        <div class="c-sidebar">
+          <div class="c-intro">
+            <h2
+              class="
+                c-header
+                c-header--fluid-small
+                c-header--margin-bottom
+              "
+            >
+              Good day <span class="c-header__name">John</span>!
+            </h2>
+            <p class="c-text c-text--neutral-500">
+              Today is <span>December 1, 2021</span>
+            </p>
+          </div>
+          <!-- <div class="c-buttons">
+            <button class="c-button c-button--square">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                add
+              </span>
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                article
+              </span>
+            </button>
+            <button class="c-button c-button--square">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                add
+              </span>
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                image
+              </span>
+            </button>
+          </div> -->
+          <div class="c-quote">
+            <p class="c-text c-text--thin c-text--italic c-text--white">
+              " There are only two ways to live your life. One is as though
+              nothing is a miracle. The other is as though everything is a
+              miracle. "
+            </p>
+            <h4
+              class="
+                c-header c-header--margin-top c-header--italic c-header--white
+              "
+            >
+              ― Albert Einstein
+            </h4>
+          </div>
+          <!-- <div class="c-bottom">
+            <p class="c-bottom__text">© iDiary Group</p>
+          </div> -->
+        </div>
+      </div>
+      <div class="l-main__entries">
+        <div class="c-entries">
+          <ul class="c-entries__list" id="main-list">
+            <!-- <li class="c-entries__on-date">
+              <div class="c-entries__date-indicator">
+                <h2
+                  class="c-header c-header--fluid-large c-header--neutral-500"
+                >
+                  01
+                </h2>
+                <div class="c-entries__month-year">
+                  <p class="c-text c-text--neutral-500">Dec</p>
+                  <p class="c-text c-text--neutral-500">2021</p>
+                </div>
+              </div>
+              <ul class="c-entries__date-entries">
+                <li class="c-entries__item c-entries__item--article">
+                  <span
+                    class="
+                      material-icons
+                      c-entries__content-icon c-entries__content-icon--blue
+                    "
+                  >
+                    article
+                  </span>
+                  <div class="c-entries__title-time">
+                    <h2 class="c-entries__title">A New Start</h2>
+                    <p class="c-text c-text--small c-text--neutral-500">
+                      10:59 am
+                    </p>
+                  </div>
+                  <div
+                    class="
+                      c-entries__content-wrap c-entries__content-wrap--text
+                    "
+                  >
+                    <p class="c-text">
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                      Ipsa, nostrum. Lorem ipsum dolor sit amet.
+                    </p>
+                  </div>
+                </li>
+                <li class="c-entries__item c-entries__item--article">
+                  <span
+                    class="
+                      material-icons
+                      c-entries__content-icon c-entries__content-icon--blue
+                    "
+                  >
+                    article
+                  </span>
+                  <div class="c-entries__title-time">
+                    <h2 class="c-entries__title">A Tough Decision</h2>
+                    <p class="c-text c-text--small c-text--neutral-500">
+                      10:15 am
+                    </p>
+                  </div>
+                  <div
+                    class="
+                      c-entries__content-wrap c-entries__content-wrap--text
+                    "
+                  >
+                    <p class="c-text">
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                      Ipsa, nostrum. Lorem ipsum dolor sit amet.
+                    </p>
+                  </div>
+                </li>
+                <li class="c-entries__item c-entries__item--green-border">
+                  <span
+                    class="
+                      material-icons
+                      c-entries__content-icon c-entries__content-icon--green
+                    "
+                  >
+                    image
+                  </span>
+                  <div class="c-entries__title-time">
+                    <h2 class="c-entries__title">Remember?</h2>
+                    <p class="c-text c-text--small c-text--neutral-500">
+                      9:59 am
+                    </p>
+                  </div>
+                  <div
+                    class="
+                      c-entries__content-wrap c-entries__content-wrap--image
+                    "
+                  >
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt="placeholder image"
+                      class="c-entries__image"
+                    />
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt="placeholder image"
+                      class="c-entries__image"
+                    />
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="c-entries__on-date">
+              <div class="c-entries__date-indicator">
+                <h2
+                  class="c-header c-header--fluid-large c-header--neutral-500"
+                >
+                  30
+                </h2>
+                <div class="c-entries__month-year">
+                  <p class="c-text c-text--neutral-500">Nov</p>
+                  <p class="c-text c-text--neutral-500">2021</p>
+                </div>
+              </div>
+              <ul class="c-entries__date-entries">
+                <li class="c-entries__item c-entries__item--article">
+                  <span
+                    class="
+                      material-icons
+                      c-entries__content-icon c-entries__content-icon--blue
+                    "
+                  >
+                    article
+                  </span>
+                  <div class="c-entries__title-time">
+                    <h2 class="c-entries__title">Blast To The Past</h2>
+                    <p class="c-text c-text--small c-text--neutral-500">
+                      8:59 am
+                    </p>
+                  </div>
+                  <div
+                    class="
+                      c-entries__content-wrap c-entries__content-wrap--text
+                    "
+                  >
+                    <p class="c-text">
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                      Ipsa, nostrum.
+                    </p>
+                  </div>
+                </li>
+                <li class="c-entries__item c-entries__item--green-border">
+                  <span
+                    class="
+                      material-icons
+                      c-entries__content-icon c-entries__content-icon--green
+                    "
+                  >
+                    image
+                  </span>
+                  <div class="c-entries__title-time">
+                    <h2 class="c-entries__title">A Relaxing Take</h2>
+                    <p class="c-text c-text--small c-text--neutral-500">
+                      7:30 am
+                    </p>
+                  </div>
+                  <div
+                    class="
+                      c-entries__content-wrap c-entries__content-wrap--image
+                    "
+                  >
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt="placeholder image"
+                      class="c-entries__image"
+                    />
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt="placeholder image"
+                      class="c-entries__image"
+                    />
+                    <img
+                      src="https://via.placeholder.com/60"
+                      alt="placeholder image"
+                      class="c-entries__image"
+                    />
+                  </div>
+                </li>
+              </ul>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+      <div class="l-main__editor">
+        <div class="c-entry-create" id="text-editor">
+          <div class="c-entry-create__top">
+            <div class="c-entry-create__name">
+              <span
+                class="
+                  material-icons
+                  c-entry-create__icon c-entry-create__icon--blue
+                "
+                >article</span
+              >
+              <h2 class="c-header c-header--large">New Entry</h2>
+            </div>
+            <button class="c-button c-button--text-only js-editor-close">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                close
+              </span>
+            </button>
+          </div>
+          <div class="c-entry-create__editor">
+            <div class="c-editor c-editor--text">
+              <div
+                class="
+                  c-editor__title-input
+                  c-editor__title-input--border-bottom-blue
+                "
+                contenteditable="true"
+                placeholder="Title Here..."
+              ></div>
+              <div
+                class="c-editor__body-input"
+                contenteditable="true"
+                placeholder="Your content here..."
+              ></div>
+            </div>
+          </div>
+          <div class="c-entry-create__bottom">
+            <button class="c-button">Done</button>
+          </div>
+        </div>
+      </div>
+      <div class="l-main__editor">
+        <div class="c-entry-create" id="image-uploader">
+          <div class="c-entry-create__top">
+            <div class="c-entry-create__name">
+              <span
+                class="
+                  material-icons
+                  c-entry-create__icon c-entry-create__icon--green
+                "
+                >image</span
+              >
+              <h2 class="c-header c-header--large">New Entry</h2>
+            </div>
+            <button class="c-button c-button--text-only js-editor-close">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                close
+              </span>
+            </button>
+          </div>
+          <div class="c-entry-create__editor">
+            <div class="c-editor">
+              <div
+                class="
+                  c-editor__title-input
+                  c-editor__title-input--border-bottom-green
+                "
+                contenteditable="true"
+                placeholder="Title Here..."
+              ></div>
+              <div class="c-editor__image-upload">
+                <label
+                  for="file"
+                  class="c-button c-button--width-100 c-button--height-100"
+                >
+                  <input
+                    class="c-editor__image-input c-editor__image-input--hidden"
+                    type="file"
+                    accept="image/gif, image/jpeg, image/png"
+                    name="image"
+                    id="file"
+                  />
+                  <span
+                    class="material-icons c-button_icon c-button__icon--font-36"
+                    >add_a_photo</span
+                  >
+                </label>
+                <div class="c-editor__image-wrap">
+                  <button class="c-editor__remove">
+                    <span class="material-icons"> remove </span>
+                  </button>
+                  <img
+                    src="./images/vector-parallax/mountains.png"
+                    alt="test image"
+                    class="c-editor__image-item"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="c-entry-create__bottom">
+            <button class="c-button">Done</button>
+          </div>
+        </div>
+      </div>
+      <div class="l-main__nav">
+        <div class="c-nav">
+          <ul id="menu-slide" class="c-nav__menu-slide">
+            <li class="c-nav__button-item">
+              <button
+                id="text-add-button"
+                class="
+                  c-button
+                  c-button--circle
+                  c-button--blue-primary-500
+                  c-button--margin-bottom
+                "
+              >
+                <span
+                  class="material-icons c-button__icon c-button__icon--font-36"
+                >
+                  post_add
+                </span>
+              </button>
+            </li>
+            <li class="c-nav__button-item">
+              <button
+                id="image-add-button"
+                class="
+                  c-button
+                  c-button--circle
+                  c-button--green-secondary-500
+                  c-button--margin-bottom
+                "
+              >
+                <span
+                  class="material-icons c-button__icon c-button__icon--font-36"
+                >
+                  add_photo_alternate
+                </span>
+              </button>
+            </li>
+          </ul>
+          <button
+            id="add-button"
+            class="c-button c-button--circle c-button--shadow"
+          >
+            <span class="material-icons c-button__icon c-button__icon--font-36">
+              add
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="l-main__account">
+        <div class="c-account">
+          <div class="c-account__top-wrap">
+            <div class="c-account__popup-name">
+              <span
+                class="
+                  material-icons
+                  c-account__icon
+                "
+                >account_circle</span
+              >
+              <h2 class="c-header c-header--large">Account</h2>
+            </div>
+            <button class="c-button c-button--text-only js-account-close">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+              >
+                close
+              </span>
+            </button>
+          </div>
+          <div class="c-account__main-wrap">
+            <div class="c-account__info">
+              <label for="file" class="c-account__choose-photo">
+                <img
+                  src="https://res.cloudinary.com/dppgyhery/image/upload/q_auto/v1631456012/samples/people/smiling-man.jpg"
+                  alt="account image"
+                  class="c-account__profile-image"
+                />
+                <input
+                  class="c-account__image-input c-account__image-input--hidden"
+                  type="file"
+                  accept="image/gif, image/jpeg, image/png"
+                  name="image"
+                  id="file"
+                />
+                <span class="material-icons c-account__choose-photo-icon"
+                  >add_a_photo</span
+                >
+              </label>
+              <div class="c-account__total-entries">
+                <h3 class="c-header c-header--fluid-large">5</h3>
+                <p class="c-text c-text--neutral-500">Entries</p>
+              </div>
+              <!-- <div class="c-account__counts">
+                <div class="c-account__total-entries">
+                  <h3 class="c-header c-header--xx-large">5</h3>
+                  <p class="c-text c-text--neutral-500">Entries</p>
+                </div>
+                <div class="c-account__total-entries">
+                  <h3 class="c-header c-header--xx-large">5</h3>
+                  <p class="c-text c-text--neutral-500">This Month</p>
+                </div>
+              </div> -->
+            </div>
+            <div class="c-account__form-wrap">
+              <form action="#" method="POST" class="c-form">
+                <div class="c-form__innerwrap">
+                  <h3 class="c-header c-header--neutral-500">Name</h3>
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--row">
+                  <input
+                    type="text"
+                    id="first-name"
+                    name="first-name"
+                    required="true"
+                    autocomplete="off"
+                    placeholder="First Name"
+                    class="c-form__input"
+                  />
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--row">
+                  <input
+                    type="text"
+                    id="last-name"
+                    name="last-name"
+                    required="true"
+                    autocomplete="off"
+                    placeholder="Last Name"
+                    class="c-form__input"
+                  />
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--align-start">
+                  <button type="submit" class="c-button">Change Name</button>
+                </div>
+              </form>
+            </div>
+            <div class="c-account__form-wrap">
+              <form action="#" method="POST" class="c-form">
+                <div class="c-form__innerwrap">
+                  <h3 class="c-header c-header--neutral-500">Email</h3>
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--row">
+                  <input
+                    type="email"
+                    id="email-edit"
+                    name="email-edit"
+                    required="true"
+                    autocomplete="off"
+                    placeholder="Email"
+                    class="c-form__input"
+                  />
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--align-start">
+                  <button type="submit" class="c-button">Change Email</button>
+                </div>
+              </form>
+            </div>
+            <div class="c-account__form-wrap">
+              <form action="#" method="POST" class="c-form">
+                <div class="c-form__innerwrap">
+                  <h3 class="c-header c-header--neutral-500">Password</h3>
+                </div>
+                <div class="c-form__innerwrap c-form__innerwrap--row">
+                  <input
+                    type="password"
+                    id="password-edit"
+                    name="password-edit"
+                    required="true"
+                    autocomplete="off"
+                    placeholder="New Password"
+                    class="c-form__input"
+                  />
+                </div>
+                <form action="#" method="POST" class="c-form">
+                  <div class="c-form__innerwrap c-form__innerwrap--row">
+                    <input
+                      type="password"
+                      id="password-edit-re"
+                      name="password-edit-re"
+                      required="true"
+                      autocomplete="off"
+                      placeholder="Re-Enter New Password"
+                      class="c-form__input"
+                    />
+                  </div>
+                <div class="c-form__innerwrap c-form__innerwrap--align-start">
+                  <button type="submit" class="c-button">Change Password</button>
+                </div>
+              </form>
+            </div>
+            <div class="c-account__more-wrap">
+              <button type="submit" class="c-button">Sign Out</button>
+            </div>
+            <div class="c-account__more-wrap c-account__more-wrap--margin-bottom">
+              <button class="c-button c-button--text-only c-button--text-red">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/ScrollTrigger.min.js"></script>
+    <script src="./scripts/app.js"></script>
+  </body>
+</html>

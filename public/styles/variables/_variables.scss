@@ -1,0 +1,232 @@
+// @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+// @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Work+Sans:wght@400;700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,300;1,400;1,700&display=swap");
+
+//font-sizes
+$xx-small: 0.563rem;
+$x-small: 0.625rem;
+$small: 0.813rem;
+$medium: 1rem;
+$large: 1.125rem;
+$x-large: 1.5rem;
+$xx-large: 2rem;
+//screens
+$tablet: 480px;
+$laptop: 768px;
+$desktop: 1024px;
+$tv: 1200px;
+//colors-primary
+$blue-primary-100: #063c4c;
+$blue-primary-200: #085a72;
+$blue-primary-300: #0b7998;
+$blue-primary-400: #0b7998;
+$blue-primary-500: #11b5e4;
+$blue-primary-600: #33c6f0;
+$blue-primary-700: #62d3f3;
+$blue-primary-800: #92e0f7;
+$blue-primary-900: #c1eefa;
+//colors-green-secondary
+$green-secondary-100: #004716;
+$green-secondary-200: #007a25;
+$green-secondary-300: #00af35;
+$green-secondary-400: #00e946;
+$green-secondary-500: #0aec4f;
+$green-secondary-600: #36ef6e;
+$green-secondary-700: #64f18f;
+$green-secondary-800: #93f5b1;
+$green-secondary-900: #c2fad3;
+//colors-blue-secondary
+$blue-secondary-100: #030f3f;
+$blue-secondary-200: #061a70;
+$blue-secondary-300: #0826a1;
+$blue-secondary-400: #0b36e3;
+$blue-secondary-500: #254be8;
+$blue-secondary-600: #4b6beb;
+$blue-secondary-700: #748cee;
+$blue-secondary-800: #a0b0f3;
+$blue-secondary-900: #cdd6f9;
+//colors-neutral
+$neutral-100: #262b2c;
+$neutral-200: #384042;
+$neutral-300: #4b5558;
+$neutral-400: #5e6b6e;
+$neutral-500: #718084;
+$neutral-600: #a1acaf;
+$neutral-700: #cdd3d5;
+$neutral-800: #f1f3f3;
+$neutral-900: #f9fafa;
+//colors-gradient
+$blue-green-grad: linear-gradient(
+  250deg,
+  rgba(
+      $color: $green-secondary-700,
+      $alpha: 1,
+    )
+    0%,
+  rgba(
+      $color: $blue-primary-700,
+      $alpha: 1,
+    )
+    100%
+);
+//font
+$header-font: "Poppins", sans-serif;
+$general-font: "Work Sans", sans-serif;
+//others
+$border-radius: 10px;
+$anim-duration: 350ms;
+$fluid-pad-mar: clamp(1rem, 8vw, 1.3rem);
+//shadows
+$short-shadow-neutral-600: 0 1px 1px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 2px 2px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 4px 4px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 6px 8px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 8px 16px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    );
+$short-shadow-neutral-500: 0 1px 1px
+    rgba(
+      $color: $neutral-500,
+      $alpha: 0.11,
+    ),
+  0 2px 2px
+    rgba(
+      $color: $neutral-500,
+      $alpha: 0.11,
+    ),
+  0 4px 4px
+    rgba(
+      $color: $neutral-500,
+      $alpha: 0.11,
+    ),
+  0 6px 8px
+    rgba(
+      $color: $neutral-500,
+      $alpha: 0.11,
+    ),
+  0 8px 16px
+    rgba(
+      $color: $neutral-500,
+      $alpha: 0.11,
+    );
+$short-shadow-neutral-600: 0 1px 1px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 2px 2px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 4px 4px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 6px 8px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    ),
+  0 8px 16px
+    rgba(
+      $color: $neutral-600,
+      $alpha: 0.11,
+    );
+$short-shadow-blue-secondary-500: 0 0px 1px
+    rgba(
+      $color: $blue-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 0px 2px
+    rgba(
+      $color: $blue-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 0px 4px
+    rgba(
+      $color: $blue-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 0px 8px
+    rgba(
+      $color: $blue-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 0px 16px
+    rgba(
+      $color: $blue-secondary-500,
+      $alpha: 0.11,
+    );
+
+$short-shadow-blue-primary-500: 0 1px 1px
+    rgba(
+      $color: $blue-primary-500,
+      $alpha: 0.11,
+    ),
+  0 2px 2px
+    rgba(
+      $color: $blue-primary-500,
+      $alpha: 0.11,
+    ),
+  0 4px 4px
+    rgba(
+      $color: $blue-primary-500,
+      $alpha: 0.11,
+    ),
+  0 6px 8px
+    rgba(
+      $color: $blue-primary-500,
+      $alpha: 0.11,
+    ),
+  0 8px 16px
+    rgba(
+      $color: $blue-primary-500,
+      $alpha: 0.11,
+    );
+$short-shadow-green-secondary-500: 0 1px 1px
+    rgba(
+      $color: $green-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 2px 2px
+    rgba(
+      $color: $green-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 4px 4px
+    rgba(
+      $color: $green-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 6px 8px
+    rgba(
+      $color: $green-secondary-500,
+      $alpha: 0.11,
+    ),
+  0 8px 16px
+    rgba(
+      $color: $green-secondary-500,
+      $alpha: 0.11,
+    );
