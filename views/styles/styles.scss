@@ -499,7 +499,7 @@
     // margin-top: 0.5rem;
     background-color: white;
     padding: 1rem v.$fluid-pad-mar;
-    // box-shadow: v.$short-shadow-neutral-600;
+    box-shadow: v.$short-shadow-neutral-600;
     // margin-bottom: 0.5rem;
 
     &--border-bottom-blue {
@@ -718,7 +718,7 @@
     display: flex;
     align-items: center;
     background-color: white;
-    // box-shadow: v.$short-shadow-neutral-600;
+    box-shadow: v.$short-shadow-neutral-600;
     justify-content: space-between;
     align-self: start;
   }
