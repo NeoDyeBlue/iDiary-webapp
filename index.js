@@ -1,24 +1,27 @@
-const EXPRESS = require("express");
-const PATH = require("path");
-const APP = EXPRESS();
-const PORT = 3000;
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+const bcrypt = require("bcrypt");
+const homeRoutes = require("./routes/home-routes");
+const loginRoutes = require("./routes/login-routes");
+const signupRoutes = require("./routes/signup-routes");
+const entryRoutes = require("./routes/entry-routes");
+const app = express();
+const port = 3000;
 
-APP.use(EXPRESS.static(__dirname + "/views"));
+// console.log(bcrypt.hashSync("password123", 10));
+// app.use(express.json());
+// for parsing application/json
+app.use(bodyParser.json());
+// for parsing application/xwww-
+app.use(bodyParser.urlencoded({ extended: true }));
+//form-urlencoded
 
-APP.get("/", (req, res) => {
-  res.sendFile(PATH.join(__dirname + "/views/index.html"));
-});
+app.use(express.static(path.join(__dirname, "/public")));
 
-APP.get("/login", (req, res) => {
-  res.sendFile(PATH.join(__dirname + "/views/login.html"));
-});
+app.use(homeRoutes);
+app.use("/login", loginRoutes);
+app.use("/signup", signupRoutes);
+app.use("/entries", entryRoutes);
 
-APP.get("/signup", (req, res) => {
-  res.sendFile(PATH.join(__dirname + "/views/signup.html"));
-});
-
-APP.get("/entries", (req, res) => {
-  res.sendFile(PATH.join(__dirname + "/views/main.html"));
-});
-
-APP.listen(PORT);
+app.listen(port);

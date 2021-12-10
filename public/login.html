@@ -13,7 +13,7 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Filled|"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css" />
-    <link rel="stylesheet" href="./styles/authentications.css" />
+    <link rel="stylesheet" href="assets/styles/authentications.css" />
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>iDiary | Login</title>
   </head>
@@ -115,7 +115,7 @@
             </p>
           </div>
           <div class="c-authenticate__container">
-            <form action="#" method="POST" class="c-form">
+            <form id="login-form" action="/login" method="POST" class="c-form">
               <div class="c-form__innerwrap">
                 <input
                   type="email"
@@ -127,6 +127,11 @@
                   autocomplete="off"
                 />
               </div>
+              <div id="email-error" class="c-form__error">
+                <p class="c-text c-text--white c-text--small">
+                  You've entered an incorrect email or password.
+                </p>
+              </div>
               <div class="c-form__innerwrap">
                 <input
                   type="password"
@@ -136,6 +141,11 @@
                   placeholder="Password"
                   class="c-form__input"
                 />
+              </div>
+              <div id="password-error" class="c-form__error">
+                <p class="c-text c-text--white c-text--small">
+                  You've entered an incorrect email or password.
+                </p>
               </div>
               <div
                 class="c-form__innerwrap c-form__innerwrap--centered-content"
@@ -179,6 +189,6 @@
         </div>
       </div>
     </div>
-    <!-- <script src="scripts/script.js"></script> -->
+    <script src="assets/scripts/login.js"></script>
   </body>
 </html>

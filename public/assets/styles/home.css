@@ -397,9 +397,9 @@ a {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem clamp(1rem, 8vw, 1.3rem);
+  padding: 0.2rem clamp(1rem, 8vw, 1.3rem);
   background-color: white;
-  box-shadow: 0 1px 1px rgba(161, 172, 175, 0.11), 0 2px 2px rgba(161, 172, 175, 0.11), 0 4px 4px rgba(161, 172, 175, 0.11), 0 6px 8px rgba(161, 172, 175, 0.11), 0 8px 16px rgba(161, 172, 175, 0.11);
+  border-bottom: 1px solid #cdd3d5;
 }
 .c-top__actions {
   display: flex;
@@ -407,9 +407,9 @@ a {
 }
 @media screen and (min-width: 768px) and (orientation: landscape) {
   .c-top {
-    padding: 0.5rem 3rem;
+    padding: 0.3rem 3rem;
     background-color: white;
-    box-shadow: 0 1px 1px rgba(161, 172, 175, 0.11), 0 2px 2px rgba(161, 172, 175, 0.11), 0 4px 4px rgba(161, 172, 175, 0.11), 0 6px 8px rgba(161, 172, 175, 0.11), 0 8px 16px rgba(161, 172, 175, 0.11);
+    border-bottom: 1px solid #cdd3d5;
   }
 }
 

@@ -143,9 +143,11 @@
   align-items: center;
   justify-content: space-between;
   background-color: white;
+  min-height: 60px;
+  max-height: 60px;
   // margin: clamp(-1.3rem, -8vw, -1rem) clamp(-1.3rem, -8vw, -1rem) 0
   //   clamp(-1.3rem, -8vw, -1rem);
-  padding: 0.5rem v.$fluid-pad-mar;
+  padding: 0.1rem v.$fluid-pad-mar;
   // border-bottom: 1px solid v.$neutral-700;
   box-shadow: v.$short-shadow-neutral-600;
 
@@ -499,6 +501,8 @@
     // margin-top: 0.5rem;
     background-color: white;
     padding: 1rem v.$fluid-pad-mar;
+    // min-height: 60px;
+    // max-height: 60px;
     box-shadow: v.$short-shadow-neutral-600;
     // margin-bottom: 0.5rem;
 

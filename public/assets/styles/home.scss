@@ -69,10 +69,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem v.$fluid-pad-mar;
+  padding: 0.2rem v.$fluid-pad-mar;
   background-color: white;
-  // border-bottom: 2px solid v.$neutral-700;
-  box-shadow: v.$short-shadow-neutral-600;
+  border-bottom: 1px solid v.$neutral-700;
+  // box-shadow: v.$short-shadow-neutral-600;
 
   &__actions {
     display: flex;
@@ -80,10 +80,10 @@
   }
 
   @media screen and (min-width: v.$laptop) and (orientation: "landscape") {
-    padding: 0.5rem 3rem;
+    padding: 0.3rem 3rem;
     background-color: white;
-    // border-bottom: 2px solid v.$neutral-700;
-    box-shadow: v.$short-shadow-neutral-600;
+    border-bottom: 1px solid v.$neutral-700;
+    // box-shadow: v.$short-shadow-neutral-600;
   }
 }
 
