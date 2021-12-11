@@ -690,6 +690,7 @@ a {
 @media screen and (min-width: 768px) {
   .c-entries__date-indicator {
     flex-direction: row-reverse;
+    min-width: 130px;
   }
 }
 .c-entries__month-year {

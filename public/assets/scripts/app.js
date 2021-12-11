@@ -1,9 +1,11 @@
+// const e = require("express");
+
 const DIARY_APP = (function () {
   document.addEventListener("DOMContentLoaded", init);
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const MONTHS = [
+  const MONTHS_SHORT = [
     "Jan",
     "Feb",
     "Mar",
@@ -17,9 +19,32 @@ const DIARY_APP = (function () {
     "Nov",
     "Dec",
   ];
+  const MONTHS_LONG = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  var currentDate = new Date();
+  const MORNING = new Date().setHours(5, 0, 0);
+  const AFTERNOON = new Date().setHours(13, 0, 0);
+  const EVENING = new Date().setHours(17, 0, 0);
   var mainGrid = document.querySelector(".l-main");
   var sidebar = document.querySelector(".c-sidebar");
+  var dayPart = document.getElementById("day-part");
+  var dateText = document.getElementById("date-today");
   var accountButton = document.getElementById("account-show");
+  var acctFirstNameEl = document.getElementById("acct-first-name");
+  var acctLastNameEl = document.getElementById("acct-last-name");
+  var welcomeNameEl = document.getElementById("user-first-name");
   var addButton = document.getElementById("add-button");
   var textAddButton = document.getElementById("text-add-button");
   var accountPopup = document.querySelector(".c-account");
@@ -35,67 +60,69 @@ const DIARY_APP = (function () {
   var dateEntries = document.querySelectorAll(".c-entries__on-date");
   var scrollPosition = null;
 
-  var sampleResponse = {
-    user: {
-      firstname: "John Paul",
-      lastname: "Zoleta",
-    },
-    entries: [
-      {
-        date: 1638550800,
-        dateEntries: [
-          {
-            title: "A New Start",
-            datetime: 1638640439,
-            type: "text",
-            content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque 
-            voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae 
-            obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-          },
-          {
-            title: "Remember?",
-            datetime: 1638622706,
-            type: "image",
-            content: [
-              "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_13_h9kqmc.png",
-              "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_1_hhwyor.png",
-            ],
-          },
-          {
-            title: "Blast To The Past",
-            datetime: 1638640439,
-            type: "text",
-            content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque 
-            voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae 
-            obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-          },
-        ],
-      },
-      {
-        date: "1638464400",
-        dateEntries: [
-          {
-            title: "A Tough Decision",
-            datetime: 1638640439,
-            type: "text",
-            content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque 
-            voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae 
-            obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-          },
-          {
-            title: "A Relaxing Take",
-            datetime: 1638622706,
-            type: "image",
-            content: [
-              "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_18.31.56_x3io2c.png",
-              "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-12-20_23.50.04_o1djls.png",
-              "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_14.27.13_vqpj0z.png",
-            ],
-          },
-        ],
-      },
-    ],
-  };
+  // var sampleResponse = {
+  //   user: {
+  //     firstname: "John Paul",
+  //     lastname: "Zoleta",
+  //   },
+  //   entries: [
+  //     {
+  //       date: 1638550800,
+  //       dateEntries: [
+  //         {
+  //           title: "A New Start",
+  //           datetime: 1638640439,
+  //           type: "text",
+  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
+  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
+  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
+  //         },
+  //         {
+  //           title: "Remember?",
+  //           datetime: 1638622706,
+  //           type: "image",
+  //           content: [
+  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_13_h9kqmc.png",
+  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_1_hhwyor.png",
+  //           ],
+  //         },
+  //         {
+  //           title: "Blast To The Past",
+  //           datetime: 1638640439,
+  //           type: "text",
+  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
+  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
+  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       date: "1638464400",
+  //       dateEntries: [
+  //         {
+  //           title: "A Tough Decision",
+  //           datetime: 1638640439,
+  //           type: "text",
+  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
+  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
+  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
+  //         },
+  //         {
+  //           title: "A Relaxing Take",
+  //           datetime: 1638622706,
+  //           type: "image",
+  //           content: [
+  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_18.31.56_x3io2c.png",
+  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-12-20_23.50.04_o1djls.png",
+  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_14.27.13_vqpj0z.png",
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // };
+
+  var sampleResponse = null;
 
   var menuTl = gsap.timeline({
     defaults: {
@@ -109,27 +136,67 @@ const DIARY_APP = (function () {
   });
 
   function init() {
-    addListeners();
-    generateEntries();
-    createGSAPAnims();
     fetchJson("/entries/all", "GET", "include").then((data) => {
-      console.log(data);
+      welcomeNameEl.innerText = data.user.firstName;
+      acctFirstNameEl.innerText = data.user.firstName;
+      acctLastNameEl.innerText = data.user.lastName;
+      initializeClock();
+      setInterval(updateClock, 1000);
+      generateEntries(data);
+      addListeners();
+      createGSAPAnims();
+      // console.log(sampleResponse.entries);
     });
   }
 
-  function generateEntries() {
+  function initializeClock() {
+    let date = `${
+      MONTHS_LONG[currentDate.getMonth()]
+    } ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+    if (currentDate >= EVENING) {
+      dayPart.innerText = "evening";
+    } else if (currentDate >= AFTERNOON) {
+      dayPart.innerText = "afternoon";
+    } else if (currentDate >= MORNING) {
+      dayPart.innerText = "morning";
+    } else {
+      dayPart.innerText = "evening";
+    }
+    dateText.innerText = date;
+  }
+
+  function updateClock() {
+    let date = `${
+      MONTHS_LONG[currentDate.getMonth()]
+    } ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+    if (currentDate >= EVENING) {
+      dayPart.innerText = "evening";
+    } else if (currentDate >= AFTERNOON) {
+      dayPart.innerText = "afternoon";
+    } else if (currentDate >= MORNING) {
+      dayPart.innerText = "morning";
+    } else {
+      dayPart.innerText = "evening";
+    }
+    dateText.innerText = date;
+  }
+
+  function generateEntries(data) {
     dateWrap = "";
-    sampleResponse.entries.forEach((dates) => {
-      let date = new Date(dates.date * 1000);
+    console.log(data);
+    data.entries.forEach((dates) => {
+      let date = new Date(dates.date);
       dateWrap += `<li class="c-entries__on-date">
       <div class="c-entries__date-indicator">
         <h2
           class="c-header c-header--fluid-large c-header--neutral-500"
         >
-          ${("0" + String(date.getDay())).slice(-2)}
+          ${("0" + String(date.getDate())).slice(-2)}
         </h2>
         <div class="c-entries__month-year">
-          <p class="c-text c-text--neutral-500">${MONTHS[date.getMonth()]}</p>
+          <p class="c-text c-text--neutral-500">${
+            MONTHS_SHORT[date.getMonth()]
+          }</p>
           <p class="c-text c-text--neutral-500">${date.getFullYear()}</p>
         </div>
       </div>
@@ -142,11 +209,11 @@ const DIARY_APP = (function () {
   }
 
   function createDateEntries(data) {
+    sampleResponse = data;
     let listItems = "";
-
-    data.forEach((entry) => {
+    sampleResponse.forEach((entry) => {
       if (entry.type == "text") {
-        listItems += `<li class="c-entries__item">
+        listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
         <span
           class="
             material-icons
@@ -158,7 +225,11 @@ const DIARY_APP = (function () {
         <div class="c-entries__title-time">
           <h2 class="c-entries__title">${entry.title}</h2>
           <p class="c-text c-text--small c-text--neutral-500">
-            ${new Date(entry.datetime * 1000).toLocaleTimeString()}
+            ${new Date(entry.time).toLocaleTimeString("en-us", {
+              hour: "numeric",
+              minute: "numeric",
+              hour12: true,
+            })}
           </p>
         </div>
         <div
@@ -170,7 +241,7 @@ const DIARY_APP = (function () {
       </div>
       </li>`;
       } else {
-        listItems += `<li class="c-entries__item">
+        listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
         <span
           class="
             material-icons
@@ -182,7 +253,11 @@ const DIARY_APP = (function () {
         <div class="c-entries__title-time">
           <h2 class="c-entries__title">${entry.title}</h2>
           <p class="c-text c-text--small c-text--neutral-500">
-          ${new Date(entry.datetime * 1000).toLocaleTimeString()}
+          ${new Date(entry.time).toLocaleTimeString("en-us", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}
           </p>
         </div>
         <div
@@ -203,10 +278,10 @@ const DIARY_APP = (function () {
     if (type == "text") {
       content += `
       <p class="c-text c-entries__text">
-      ${data}
+      ${data.content}
       </p>`;
     } else if (type == "image") {
-      data.forEach((url) => {
+      data.content.forEach((url) => {
         content += `<img
         src="${url}"
         alt="entry image"

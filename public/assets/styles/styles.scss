@@ -300,7 +300,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  // background-color: v.$neutral-900;
   padding: v.$fluid-pad-mar;
   // border-top: 1px solid v.$neutral-700;
   // border-bottom: 1px solid v.$neutral-700;
@@ -345,7 +344,7 @@
     @media screen and (min-width: v.$laptop) {
       flex-direction: row-reverse;
       // margin-left: 2rem;
-      // min-width: 150px;
+      min-width: 130px;
     }
   }
 
@@ -454,6 +453,7 @@
 
   @media screen and (min-width: v.$laptop) {
     // border-left: 2px solid v.$neutral-800;
+    // background-color: v.$neutral-800;
     border-top: none;
     border-bottom: none;
     // border-left: 1px solid v.$neutral-700;
