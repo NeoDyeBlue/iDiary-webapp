@@ -37,7 +37,6 @@ const DIARY_APP = (function () {
 
   var sampleResponse = {
     user: {
-      id: "1001",
       firstname: "John Paul",
       lastname: "Zoleta",
     },
@@ -113,6 +112,9 @@ const DIARY_APP = (function () {
     addListeners();
     generateEntries();
     createGSAPAnims();
+    fetchJson("/entries/all", "GET", "include").then((data) => {
+      console.log(data);
+    });
   }
 
   function generateEntries() {
@@ -347,6 +349,20 @@ const DIARY_APP = (function () {
     let editor = imageUploader.querySelector(".c-entry-create__editor");
     parentContainer.classList.toggle("l-main__editor--visible");
     imageUploader.classList.toggle("c-entry-create--visible");
+  }
+
+  async function fetchJson(
+    link,
+    method,
+    credentials = null,
+    body = null,
+    headers = null
+  ) {
+    let response = null;
+    response = await fetch(link, { method, credentials });
+
+    const data = await response.json();
+    return data;
   }
 
   function addListeners() {

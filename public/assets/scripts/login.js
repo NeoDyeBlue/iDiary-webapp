@@ -49,7 +49,6 @@ const LOGIN = (function () {
         window.location.href = "/entries";
       }
     });
-
     // return false;
   }
 

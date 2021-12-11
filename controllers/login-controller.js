@@ -11,7 +11,7 @@ const login_auth = async (req, res) => {
   if (result.user.a0) {
     res
       .cookie("token", result.user.token, {
-        expires: new Date(Date.now() + 1200),
+        // expires: new Date(Date.now() + 1200),
         secure: false,
         httpOnly: true,
       })

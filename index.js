@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const homeRoutes = require("./routes/home-routes");
@@ -13,9 +14,8 @@ const port = 3000;
 // app.use(express.json());
 // for parsing application/json
 app.use(bodyParser.json());
-// for parsing application/xwww-
 app.use(bodyParser.urlencoded({ extended: true }));
-//form-urlencoded
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "/public")));
 

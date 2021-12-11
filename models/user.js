@@ -26,7 +26,10 @@ async function read(body) {
       if (await bcrypt.compare(password, UserPassword)) {
         auth.result.a2 = true;
         auth.user.a0 = true;
-        auth.user.token = jwt.sign(UserID, process.env.JWT_AT_SECRET);
+        auth.user.token = jwt.sign(
+          { userId: UserID },
+          process.env.JWT_AT_SECRET
+        );
       }
     }
     return auth;
