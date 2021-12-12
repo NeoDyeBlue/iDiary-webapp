@@ -55,7 +55,10 @@
             <h1 class="c-logo__appname">iDiary</h1>
           </div>
           <div class="c-account-button" id="account-show">
-            <p class="c-text c-account-button__name"><span id="acct-first-name">---</span> <span id="acct-last-name">---</span></p>
+            <p class="c-text c-account-button__name">
+              <span id="acct-first-name">---</span>
+              <span id="acct-last-name">---</span>
+            </p>
             <div class="c-account-button__image"></div>
           </div>
         </div>
@@ -63,14 +66,11 @@
       <div class="l-main__sidebar">
         <div class="c-sidebar">
           <div class="c-intro">
-            <h2
-              class="
-                c-header
-                c-header--fluid-small
-                c-header--margin-bottom
-              "
-            >
-              Good <span id="day-part">day</span> <span class="c-header--blue-primary-500" id="user-first-name">---</span>!
+            <h2 class="c-header c-header--fluid-small c-header--margin-bottom">
+              Good <span id="day-part">day</span>
+              <span class="c-header--blue-primary-500" id="user-first-name"
+                >---</span
+              >!
             </h2>
             <p class="c-text c-text--neutral-500">
               Today is <span id="date-today">---</span>
@@ -313,7 +313,7 @@
                   material-icons
                   c-entry-create__icon c-entry-create__icon--blue
                 "
-                >article</span
+                >post_add</span
               >
               <h2 class="c-header c-header--large">New Entry</h2>
             </div>
@@ -328,15 +328,18 @@
           <div class="c-entry-create__editor">
             <div class="c-editor c-editor--text">
               <div
+                id="text-title-input"
                 class="
                   c-editor__title-input
                   c-editor__title-input--border-bottom-blue
+                  js-editor-editable
                 "
                 contenteditable="true"
                 placeholder="Title Here..."
               ></div>
               <div
-                class="c-editor__body-input"
+                id="text-body-input"
+                class="c-editor__body-input js-editor-editable"
                 contenteditable="true"
                 placeholder="Your content here..."
               ></div>
@@ -356,7 +359,7 @@
                   material-icons
                   c-entry-create__icon c-entry-create__icon--green
                 "
-                >image</span
+                >add_photo_alternate</span
               >
               <h2 class="c-header c-header--large">New Entry</h2>
             </div>
@@ -371,9 +374,11 @@
           <div class="c-entry-create__editor">
             <div class="c-editor">
               <div
+                id="image-title-input"
                 class="
                   c-editor__title-input
                   c-editor__title-input--border-bottom-green
+                  js-editor-editable
                 "
                 contenteditable="true"
                 placeholder="Title Here..."
@@ -381,7 +386,14 @@
               <div class="c-editor__image-upload">
                 <label
                   for="file"
-                  class="c-button c-button--width-100 c-button--height-100"
+                  class="
+                    c-button
+                    c-button--width-100
+                    c-button--height-100
+                    c-button--text-only
+                    c-button--text-neutral-600
+                    c-button--border-neutral-600
+                  "
                 >
                   <input
                     class="c-editor__image-input c-editor__image-input--hidden"
@@ -410,6 +422,32 @@
           </div>
           <div class="c-entry-create__bottom">
             <button class="c-button">Done</button>
+          </div>
+        </div>
+      </div>
+      <div class="l-main__viewer">
+        <div class="c-viewer" id="text-viewer">
+          <div class="c-viewer__top">
+            <button class="c-button c-button--text-only js-viewer-close">
+              <span
+                class="material-icons c-button__icon c-button__icon--font-36"
+                >close</span
+              >
+            </button>
+          </div>
+          <div class="c-viewer__title c-viewer__title--border-blue">
+            <h2 class="c-header c-header--fluid-large" id="text-entry-title">
+              Title Goes Here
+            </h2>
+            <p
+              class="c-text c-text--small c-text--neutral-500"
+              id="text-entry-datetime"
+            >
+              Datetime here
+            </p>
+          </div>
+          <div class="c-viewer__content">
+            <p id="text-entry-content" class="c-text">Content goes here</p>
           </div>
         </div>
       </div>
@@ -462,16 +500,10 @@
         </div>
       </div>
       <div class="l-main__account">
-        <div class="c-account">
+        <div class="c-account" id="account-display">
           <div class="c-account__top-wrap">
             <div class="c-account__popup-name">
-              <span
-                class="
-                  material-icons
-                  c-account__icon
-                "
-                >account_circle</span
-              >
+              <span class="material-icons c-account__icon">account_circle</span>
               <h2 class="c-header c-header--large">Account</h2>
             </div>
             <button class="c-button c-button--text-only js-account-close">
@@ -484,7 +516,7 @@
           </div>
           <div class="c-account__main-wrap">
             <div class="c-account__info">
-              <label for="file" class="c-account__choose-photo">
+              <label for="image" class="c-account__choose-photo">
                 <img
                   src="https://res.cloudinary.com/dppgyhery/image/upload/q_auto/v1631456012/samples/people/smiling-man.jpg"
                   alt="account image"
@@ -495,7 +527,7 @@
                   type="file"
                   accept="image/gif, image/jpeg, image/png"
                   name="image"
-                  id="file"
+                  id="acct-image-upload"
                 />
                 <span class="material-icons c-account__choose-photo-icon"
                   >add_a_photo</span
@@ -526,7 +558,7 @@
                     type="text"
                     id="first-name"
                     name="first-name"
-                    required="true"
+                    required
                     autocomplete="off"
                     placeholder="First Name"
                     class="c-form__input"
@@ -537,7 +569,7 @@
                     type="text"
                     id="last-name"
                     name="last-name"
-                    required="true"
+                    required
                     autocomplete="off"
                     placeholder="Last Name"
                     class="c-form__input"
@@ -558,7 +590,7 @@
                     type="email"
                     id="email-edit"
                     name="email-edit"
-                    required="true"
+                    required
                     autocomplete="off"
                     placeholder="Email"
                     class="c-form__input"
@@ -579,34 +611,39 @@
                     type="password"
                     id="password-edit"
                     name="password-edit"
-                    required="true"
+                    required
                     autocomplete="off"
                     placeholder="New Password"
                     class="c-form__input"
                   />
                 </div>
-                <form action="#" method="POST" class="c-form">
-                  <div class="c-form__innerwrap c-form__innerwrap--row">
-                    <input
-                      type="password"
-                      id="password-edit-re"
-                      name="password-edit-re"
-                      required="true"
-                      autocomplete="off"
-                      placeholder="Re-Enter New Password"
-                      class="c-form__input"
-                    />
-                  </div>
+                <div class="c-form__innerwrap c-form__innerwrap--row">
+                  <input
+                    type="password"
+                    id="password-edit-re"
+                    name="password-edit-re"
+                    required
+                    autocomplete="off"
+                    placeholder="Re-Enter New Password"
+                    class="c-form__input"
+                  />
+                </div>
                 <div class="c-form__innerwrap c-form__innerwrap--align-start">
-                  <button type="submit" class="c-button">Change Password</button>
+                  <button type="submit" class="c-button">
+                    Change Password
+                  </button>
                 </div>
               </form>
             </div>
             <div class="c-account__more-wrap">
               <button type="submit" class="c-button">Sign Out</button>
             </div>
-            <div class="c-account__more-wrap c-account__more-wrap--margin-bottom">
-              <button class="c-button c-button--text-only c-button--text-red">Delete Account</button>
+            <div
+              class="c-account__more-wrap c-account__more-wrap--margin-bottom"
+            >
+              <button class="c-button c-button--text-only c-button--text-red">
+                Delete Account
+              </button>
             </div>
           </div>
         </div>

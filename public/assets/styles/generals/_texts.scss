@@ -17,7 +17,11 @@
   }
 
   &--fluid-xx-large {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, 4rem);
+  }
+
+  &--fluid-x-large {
+    font-size: clamp(2rem, 5vw, 3.8rem);
   }
 
   &--fluid-large {
@@ -96,6 +100,7 @@
 //text
 .c-text {
   color: v.$neutral-100;
+  // align-items: center;
   &__link {
     font-weight: 700;
     color: v.$blue-secondary-500;
@@ -145,8 +150,14 @@
     font-weight: 300;
   }
 
-  &--center {
+  &--text-center {
     text-align: center;
+  }
+
+  &--centered-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   //colors
@@ -172,5 +183,9 @@
 
   &--white {
     color: white;
+  }
+
+  &--red {
+    color: v.$error-red;
   }
 }

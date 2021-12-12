@@ -17,6 +17,10 @@
     border-radius v.$anim-duration ease;
   // box-shadow: v.$short-shadow-blue-secondary-500;
 
+  &:hover {
+    background-color: v.$blue-secondary-300;
+  }
+
   &__icon {
     &--font-36 {
       font-size: 36px;
@@ -37,6 +41,26 @@
     // text-shadow: v.$short-shadow-blue-secondary-500;
     box-shadow: none;
     padding: 0;
+
+    &:hover {
+      background-color: inherit;
+    }
+  }
+
+  &--text-neutral-600 {
+    color: v.$neutral-600;
+  }
+
+  &--text-green-secondary-500 {
+    color: v.$green-secondary-500;
+  }
+
+  &--border-green-secondary-500 {
+    border: 2px solid v.$green-secondary-500;
+  }
+
+  &--border-neutral-600 {
+    border: 2px solid v.$neutral-600;
   }
 
   &--text-white {
@@ -65,6 +89,42 @@
     border-radius: 50%;
     width: 70px;
     height: 70px;
+
+    // &:hover {
+    //   background-color: v.$neutral-800;
+    // }
+
+    // &:active {
+    //   background-color: v.$neutral-900;
+    // }
+  }
+
+  &--circle-small {
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition-duration: 0ms;
+
+    &:hover {
+      background-color: v.$neutral-800;
+    }
+
+    &:active {
+      background-color: v.$neutral-700;
+    }
+  }
+
+  &--circle-small-blue-secondary {
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition-duration: 0ms;
+
+    &:hover {
+      background-color: v.$blue-secondary-800;
+    }
+
+    &:active {
+      background-color: v.$blue-secondary-900;
+    }
   }
 
   &--large {
@@ -86,11 +146,19 @@
   &--blue-primary-500 {
     background-color: v.$blue-primary-500;
     // box-shadow: v.$short-shadow-blue-primary-500;
+
+    &:hover {
+      background-color: v.$blue-primary-400;
+    }
   }
 
   &--green-secondary-500 {
     background-color: v.$green-secondary-500;
     // box-shadow: v.$short-shadow-green-secondary-500;
+
+    &:hover {
+      background-color: v.$green-secondary-300;
+    }
   }
 
   &--rotate {
@@ -100,5 +168,9 @@
     box-shadow: 0 0 0 transparent;
     // border-radius: 50%;
     text-shadow: v.$short-shadow-neutral-600;
+
+    &:hover {
+      background-color: inherit;
+    }
   }
 }

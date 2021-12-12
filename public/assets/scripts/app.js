@@ -5,6 +5,7 @@ const DIARY_APP = (function () {
 
   gsap.registerPlugin(ScrollTrigger);
 
+  //datetime vars
   const MONTHS_SHORT = [
     "Jan",
     "Feb",
@@ -37,28 +38,39 @@ const DIARY_APP = (function () {
   const MORNING = new Date().setHours(5, 0, 0);
   const AFTERNOON = new Date().setHours(13, 0, 0);
   const EVENING = new Date().setHours(17, 0, 0);
-  var mainGrid = document.querySelector(".l-main");
-  var sidebar = document.querySelector(".c-sidebar");
   var dayPart = document.getElementById("day-part");
   var dateText = document.getElementById("date-today");
+  //dom vars
+  var mainGrid = document.querySelector(".l-main");
+  var sidebar = document.querySelector(".c-sidebar");
   var accountButton = document.getElementById("account-show");
   var acctFirstNameEl = document.getElementById("acct-first-name");
   var acctLastNameEl = document.getElementById("acct-last-name");
   var welcomeNameEl = document.getElementById("user-first-name");
   var addButton = document.getElementById("add-button");
   var textAddButton = document.getElementById("text-add-button");
-  var accountPopup = document.querySelector(".c-account");
+  var accountPopup = document.getElementById("account-display");
   var imageAddButton = document.getElementById("image-add-button");
   var textEditor = document.getElementById("text-editor");
   var imageUploader = document.getElementById("image-uploader");
-  var textEditor = document.getElementById("text-editor");
+  var contentEditables = document.querySelectorAll(".js-editor-editable");
   var menu = document.getElementById("menu-slide");
   var accountCloseButton = document.querySelector(".js-account-close");
   var editorCloseButtons = document.querySelectorAll(".js-editor-close");
+  var activeEntryMenu = null;
   var menuItems = document.querySelectorAll(".c-nav__button-item");
   var mainList = document.getElementById("main-list");
-  var dateEntries = document.querySelectorAll(".c-entries__on-date");
   var scrollPosition = null;
+  //editor vars
+  var toPopup = {
+    display: null,
+  };
+  //viewer vars
+  var viewerCloseButtons = document.querySelectorAll(".js-viewer-close");
+  var textViewer = document.getElementById("text-viewer");
+  var entryTextTitle = document.getElementById("text-entry-title");
+  var entryTextContent = document.getElementById("text-entry-content");
+  var entryTextDatetime = document.getElementById("text-entry-datetime");
 
   // var sampleResponse = {
   //   user: {
@@ -124,6 +136,8 @@ const DIARY_APP = (function () {
 
   var sampleResponse = null;
 
+  let response = null;
+
   var menuTl = gsap.timeline({
     defaults: {
       duration: 0.25,
@@ -183,7 +197,8 @@ const DIARY_APP = (function () {
 
   function generateEntries(data) {
     dateWrap = "";
-    console.log(data);
+    response = data;
+    // console.log(data);
     data.entries.forEach((dates) => {
       let date = new Date(dates.date);
       dateWrap += `<li class="c-entries__on-date">
@@ -209,11 +224,12 @@ const DIARY_APP = (function () {
   }
 
   function createDateEntries(data) {
-    sampleResponse = data;
+    // sampleResponse = data;
     let listItems = "";
-    sampleResponse.forEach((entry) => {
+    data.forEach((entry) => {
       if (entry.type == "text") {
         listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
+        <div class="c-entries__top">
         <span
           class="
             material-icons
@@ -222,6 +238,27 @@ const DIARY_APP = (function () {
         >
           article
         </span>
+        <div class="c-entries__menu">
+        <button
+          class="
+            c-button c-button--circle-small c-button--text-only c-button--text-black
+            js-entry-menu
+          "
+        >
+          <span class="material-icons"> more_vert </span>
+        </button>
+        <ul class="c-entries__dropdown">
+          <li class="c-entries__menu-item js-entry-edit">
+            <span class="material-icons c-entries__menu-item-icon">edit</span>
+            <p class="c-text">Edit</p>
+          </li>
+          <li class="c-entries__menu-item js-entry-delete">
+            <span class="material-icons c-entries__menu-item-icon">delete</span>
+            <p class="c-text">Delete</p>
+          </li>
+        </ul>
+      </div>
+        </div>
         <div class="c-entries__title-time">
           <h2 class="c-entries__title">${entry.title}</h2>
           <p class="c-text c-text--small c-text--neutral-500">
@@ -242,6 +279,7 @@ const DIARY_APP = (function () {
       </li>`;
       } else {
         listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
+        <div class="c-entries__top">
         <span
           class="
             material-icons
@@ -250,6 +288,27 @@ const DIARY_APP = (function () {
         >
           image
         </span>
+        <div class="c-entries__menu">
+        <button
+          class="
+            c-button c-button--circle-small c-button--text-only c-button--text-black
+            js-entry-menu
+          "
+        >
+          <span class="material-icons"> more_vert </span>
+        </button>
+        <ul class="c-entries__dropdown">
+          <li class="c-entries__menu-item js-entry-edit">
+            <span class="material-icons c-entries__menu-item-icon">edit</span>
+            <p class="c-text">Edit</p>
+          </li>
+          <li class="c-entries__menu-item js-entry-delete">
+            <span class="material-icons c-entries__menu-item-icon">delete</span>
+            <p class="c-text">Delete</p>
+          </li>
+        </ul>
+      </div>
+        </div>
         <div class="c-entries__title-time">
           <h2 class="c-entries__title">${entry.title}</h2>
           <p class="c-text c-text--small c-text--neutral-500">
@@ -334,14 +393,55 @@ const DIARY_APP = (function () {
   }
 
   function checkTarget(event) {
-    if (event.target.classList.contains("l-main__editor")) {
-      let editor = event.target.querySelector(".c-entry-create").id;
+    let target = event.target;
+    // console.log(target);
+    if (target.classList.contains("l-main__editor")) {
+      let editor = target.querySelector(".c-entry-create").id;
       if (editor == "text-editor") {
-        hideTextEditor();
+        closeTextEditor();
       } else if (editor == "image-uploader") {
-        hideImageUploader();
+        closeImageUploader();
       }
     }
+    // } else if (
+    //   target.parentNode.classList.contains("js-entry-menu") ||
+    //   target.classList.contains("js-entry-menu")
+    // ) {
+    //   hideMenu();
+    //   // hideEntryDropdowns();
+    //   // showEntryDropdown(target);
+    // }
+    else if (
+      target.parentNode.id == "add-button" ||
+      target.id == "add-button"
+    ) {
+      showMenu();
+      activeEntryMenu = null;
+      hideEntryDropdowns();
+    } else {
+      activeEntryMenu = null;
+      hideEntryDropdowns();
+      hideMenu();
+    }
+  }
+
+  function showEntryDropdown(event) {
+    // console.log(target);
+    hideMenu();
+    let dropdown = event.target.parentNode.querySelector(
+      ".c-entries__dropdown"
+    );
+    activeEntryMenu = dropdown;
+    hideEntryDropdowns();
+    dropdown.classList.toggle("c-entries__dropdown--visible");
+  }
+
+  function hideEntryDropdowns() {
+    document.querySelectorAll(".c-entries__dropdown").forEach((dropdown) => {
+      if (!(dropdown === activeEntryMenu)) {
+        dropdown.classList.remove("c-entries__dropdown--visible");
+      }
+    });
   }
 
   function showMenu() {
@@ -356,7 +456,13 @@ const DIARY_APP = (function () {
     }
   }
 
-  function showAccountPopup() {
+  function hideMenu() {
+    addButton.classList.remove("c-button--rotate");
+    menu.classList.remove(menu.classList[0] + "--visible");
+    menuTl.reverse();
+  }
+
+  function showAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
     scrollPosition = window.scrollY;
     parentContainer.classList.add("l-main__account--visible");
@@ -365,12 +471,10 @@ const DIARY_APP = (function () {
     document.body.style.top = -scrollPosition + "px";
   }
 
-  function hideAccountPopup() {
+  function closeAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
     parentContainer.classList.remove("l-main__account--visible");
     accountPopup.classList.remove("c-account--visible");
-    document.body.classList.remove("c-body--no-scroll");
-    window.scrollTo(0, scrollPosition);
   }
 
   function showTextEditor() {
@@ -383,12 +487,13 @@ const DIARY_APP = (function () {
     showMenu();
   }
 
-  function hideTextEditor() {
+  function closeTextEditor() {
     let parentContainer = textEditor.parentNode;
+    textEditor.querySelectorAll(".js-editor-editable").forEach((editable) => {
+      editable.textContent = "";
+    });
     parentContainer.classList.remove("l-main__editor--visible");
     textEditor.classList.remove("c-entry-create--visible");
-    document.body.classList.remove("c-body--no-scroll");
-    window.scrollTo(0, scrollPosition);
   }
 
   function showImageUploader() {
@@ -401,29 +506,97 @@ const DIARY_APP = (function () {
     showMenu();
   }
 
-  function hideImageUploader() {
+  function closeImageUploader() {
     let parentContainer = imageUploader.parentNode;
+    imageUploader
+      .querySelectorAll(".js-editor-editable")
+      .forEach((editable) => {
+        editable.textContent = "";
+      });
     parentContainer.classList.remove("l-main__editor--visible");
     imageUploader.classList.remove("c-entry-create--visible");
+  }
+
+  function closePopup() {
+    let parentContainer = this.parentNode.parentNode;
+    console.log(parentContainer);
+    switch (parentContainer.id) {
+      case "image-uploader":
+        closeImageUploader();
+        break;
+      case "text-editor":
+        closeTextEditor();
+        break;
+      case "text-viewer":
+        closeTextViewer();
+        break;
+      case "account-display":
+        closeAccountDisplay();
+      default:
+        break;
+    }
     document.body.classList.remove("c-body--no-scroll");
     window.scrollTo(0, scrollPosition);
   }
 
-  function closeEditor() {
-    let parentContainer = this.parentNode.parentNode;
-    if (parentContainer.id == "image-uploader") {
-      hideImageUploader();
-    } else {
-      hideTextEditor();
+  function pasteCatcher(event) {
+    event.preventDefault();
+    let text = event.clipboardData.getData("text/plain");
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    range.deleteContents();
+    let node = document.createTextNode(text);
+    range.insertNode(node);
+
+    selection.collapseToEnd();
+
+    // for(let position = 0; position != text.length; position++)
+    // {
+    //     selection.modify("move", "right", "character");
+    // };
+  }
+
+  function viewEntry() {
+    let item = this;
+    let itemId = item.getAttribute("data-id");
+    let itemDatetime = null;
+    let itemEntry = null;
+
+    scrollPosition = window.scrollY;
+    document.body.classList.toggle("c-body--no-scroll");
+    document.body.style.top = -scrollPosition + "px";
+
+    response.entries.forEach((date) => {
+      date.dateEntries.forEach((entry) => {
+        if (entry.entryId == itemId) {
+          itemEntry = entry;
+        }
+      });
+    });
+    // console.log(itemEntry);
+    if (itemEntry.type == "text") {
+      itemDatetime = new Date(itemEntry.time);
+      entryTextTitle.innerText = itemEntry.title;
+      entryTextContent.innerText = itemEntry.content.content;
+      entryTextDatetime.innerText = `${
+        MONTHS_LONG[itemDatetime.getMonth()]
+      } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+        "en-us",
+        {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }
+      )}`;
+
+      textViewer.parentNode.classList.add("l-main__viewer--visible");
+      textViewer.classList.add("c-viewer--visible");
     }
   }
 
-  function hideImageUpload() {
-    document.body.classList.toggle("c-body--no-scroll");
-    let parentContainer = imageUploader.parentNode;
-    let editor = imageUploader.querySelector(".c-entry-create__editor");
-    parentContainer.classList.toggle("l-main__editor--visible");
-    imageUploader.classList.toggle("c-entry-create--visible");
+  function closeTextViewer() {
+    textViewer.parentNode.classList.remove("l-main__viewer--visible");
+    textViewer.classList.remove("c-viewer--visible");
   }
 
   async function fetchJson(
@@ -441,15 +614,32 @@ const DIARY_APP = (function () {
   }
 
   function addListeners() {
-    addButton.addEventListener("click", showMenu);
-    // document.addEventListener("click", function (event) {
-    //   checkTarget(event);
-    // });
-    editorCloseButtons.forEach((button) => {
-      button.addEventListener("click", closeEditor);
+    document.querySelectorAll(".c-entries__item").forEach((item) => {
+      item.addEventListener("click", viewEntry);
     });
-    accountCloseButton.addEventListener("click", hideAccountPopup);
-    accountButton.addEventListener("click", showAccountPopup);
+    document.querySelectorAll(".js-entry-menu").forEach((menu) => {
+      menu.addEventListener("click", function (event) {
+        event.stopPropagation();
+        showEntryDropdown.bind(this)(event);
+      });
+    });
+    // addButton.addEventListener("click", showMenu);
+    document.addEventListener("click", function (event) {
+      checkTarget(event);
+    });
+    editorCloseButtons.forEach((button) => {
+      button.addEventListener("click", closePopup);
+    });
+    contentEditables.forEach((editable) => {
+      editable.addEventListener("paste", function (event) {
+        pasteCatcher.bind(this)(event);
+      });
+    });
+    accountCloseButton.addEventListener("click", closeAccountDisplay);
+    viewerCloseButtons.forEach((button) => {
+      button.addEventListener("click", closePopup);
+    });
+    accountButton.addEventListener("click", showAccountDisplay);
     imageAddButton.addEventListener("click", showImageUploader);
     textAddButton.addEventListener("click", showTextEditor);
   }

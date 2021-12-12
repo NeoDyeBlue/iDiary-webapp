@@ -83,6 +83,7 @@ a {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  pointer-events: none;
 }
 
 .c-form {
@@ -157,6 +158,9 @@ a {
   cursor: pointer;
   transition: transform 350ms ease, background-color 350ms ease, box-shadow 350ms ease, color 350ms ease, 350ms text-shadow ease, border-radius 350ms ease;
 }
+.c-button:hover {
+  background-color: #0826a1;
+}
 .c-button__icon--font-36 {
   font-size: 36px;
 }
@@ -171,6 +175,21 @@ a {
   color: #254be8;
   box-shadow: none;
   padding: 0;
+}
+.c-button--text-only:hover {
+  background-color: inherit;
+}
+.c-button--text-neutral-600 {
+  color: #a1acaf;
+}
+.c-button--text-green-secondary-500 {
+  color: #0aec4f;
+}
+.c-button--border-green-secondary-500 {
+  border: 2px solid #0aec4f;
+}
+.c-button--border-neutral-600 {
+  border: 2px solid #a1acaf;
 }
 .c-button--text-white {
   color: white;
@@ -193,6 +212,28 @@ a {
   width: 70px;
   height: 70px;
 }
+.c-button--circle-small {
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition-duration: 0ms;
+}
+.c-button--circle-small:hover {
+  background-color: #f1f3f3;
+}
+.c-button--circle-small:active {
+  background-color: #cdd3d5;
+}
+.c-button--circle-small-blue-secondary {
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition-duration: 0ms;
+}
+.c-button--circle-small-blue-secondary:hover {
+  background-color: #a0b0f3;
+}
+.c-button--circle-small-blue-secondary:active {
+  background-color: #cdd6f9;
+}
 .c-button--large {
   padding: 1em 3em;
 }
@@ -208,8 +249,14 @@ a {
 .c-button--blue-primary-500 {
   background-color: #11b5e4;
 }
+.c-button--blue-primary-500:hover {
+  background-color: #0b7998;
+}
 .c-button--green-secondary-500 {
   background-color: #0aec4f;
+}
+.c-button--green-secondary-500:hover {
+  background-color: #00af35;
 }
 .c-button--rotate {
   background-color: rgba(37, 75, 232, 0);
@@ -217,6 +264,9 @@ a {
   color: #254be8;
   box-shadow: 0 0 0 transparent;
   text-shadow: 0 1px 1px rgba(161, 172, 175, 0.11), 0 2px 2px rgba(161, 172, 175, 0.11), 0 4px 4px rgba(161, 172, 175, 0.11), 0 6px 8px rgba(161, 172, 175, 0.11), 0 8px 16px rgba(161, 172, 175, 0.11);
+}
+.c-button--rotate:hover {
+  background-color: inherit;
 }
 
 .c-logo {
@@ -286,7 +336,10 @@ a {
   font-size: 2rem;
 }
 .c-header--fluid-xx-large {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+.c-header--fluid-x-large {
+  font-size: clamp(2rem, 5vw, 3.8rem);
 }
 .c-header--fluid-large {
   font-size: clamp(2rem, 5vw, 3.5rem);
@@ -383,8 +436,13 @@ a {
 .c-text--thin {
   font-weight: 300;
 }
-.c-text--center {
+.c-text--text-center {
   text-align: center;
+}
+.c-text--centered-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 .c-text--neutral-500 {
   color: #718084;
@@ -403,6 +461,9 @@ a {
 }
 .c-text--white {
   color: white;
+}
+.c-text--red {
+  color: #fd0b1d;
 }
 
 .l-app {
