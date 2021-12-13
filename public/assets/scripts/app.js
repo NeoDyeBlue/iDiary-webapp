@@ -5,6 +5,7 @@ const DIARY_APP = (function () {
 
   gsap.registerPlugin(ScrollTrigger);
 
+  //#region
   //datetime vars
   const MONTHS_SHORT = [
     "Jan",
@@ -41,8 +42,6 @@ const DIARY_APP = (function () {
   var dayPart = document.getElementById("day-part");
   var dateText = document.getElementById("date-today");
   //dom vars
-  var mainGrid = document.querySelector(".l-main");
-  var sidebar = document.querySelector(".c-sidebar");
   var accountButton = document.getElementById("account-show");
   var acctFirstNameEl = document.getElementById("acct-first-name");
   var acctLastNameEl = document.getElementById("acct-last-name");
@@ -51,26 +50,28 @@ const DIARY_APP = (function () {
   var textAddButton = document.getElementById("text-add-button");
   var accountPopup = document.getElementById("account-display");
   var imageAddButton = document.getElementById("image-add-button");
-  var textEditor = document.getElementById("text-editor");
-  var imageUploader = document.getElementById("image-uploader");
   var contentEditables = document.querySelectorAll(".js-editor-editable");
   var menu = document.getElementById("menu-slide");
   var accountCloseButton = document.querySelector(".js-account-close");
-  var editorCloseButtons = document.querySelectorAll(".js-editor-close");
-  var activeEntryMenu = null;
   var menuItems = document.querySelectorAll(".c-nav__button-item");
   var mainList = document.getElementById("main-list");
-  var scrollPosition = null;
   //editor vars
-  var toPopup = {
-    display: null,
-  };
+  var textTitleInput = document.getElementById("text-title-input");
+  var textBodyInput = document.getElementById("text-body-input");
+  var textEditor = document.getElementById("text-editor");
+  var imageUploader = document.getElementById("image-uploader");
+  var editorCloseButtons = document.querySelectorAll(".js-editor-close");
+  var editorDoneButtons = document.querySelectorAll(".js-editor-done");
   //viewer vars
   var viewerCloseButtons = document.querySelectorAll(".js-viewer-close");
   var textViewer = document.getElementById("text-viewer");
   var entryTextTitle = document.getElementById("text-entry-title");
   var entryTextContent = document.getElementById("text-entry-content");
   var entryTextDatetime = document.getElementById("text-entry-datetime");
+  var imageViewer = document.getElementById("image-viewer");
+  var entryImageTitle = document.getElementById("image-entry-title");
+  var entryImageContent = document.getElementById("image-entry-content");
+  var entryImageDatetime = document.getElementById("image-entry-datetime");
 
   // var sampleResponse = {
   //   user: {
@@ -135,8 +136,10 @@ const DIARY_APP = (function () {
   // };
 
   var sampleResponse = null;
-
-  let response = null;
+  var activeEntryMenu = null;
+  var scrollPosition = null;
+  var response = null;
+  //#endregion
 
   var menuTl = gsap.timeline({
     defaults: {
@@ -260,7 +263,9 @@ const DIARY_APP = (function () {
       </div>
         </div>
         <div class="c-entries__title-time">
-          <h2 class="c-entries__title">${entry.title}</h2>
+          <h2 class="c-header c-header--x-large c-header--break-word c-header--margin-bottom">${
+            entry.title
+          }</h2>
           <p class="c-text c-text--small c-text--neutral-500">
             ${new Date(entry.time).toLocaleTimeString("en-us", {
               hour: "numeric",
@@ -310,7 +315,9 @@ const DIARY_APP = (function () {
       </div>
         </div>
         <div class="c-entries__title-time">
-          <h2 class="c-entries__title">${entry.title}</h2>
+          <h2 class="c-header c-header--x-large c-header--break-word c-header--margin-bottom">${
+            entry.title
+          }</h2>
           <p class="c-text c-text--small c-text--neutral-500">
           ${new Date(entry.time).toLocaleTimeString("en-us", {
             hour: "numeric",
@@ -337,14 +344,14 @@ const DIARY_APP = (function () {
     if (type == "text") {
       content += `
       <p class="c-text c-entries__text">
-      ${data.content}
+      ${data}
       </p>`;
     } else if (type == "image") {
-      data.content.forEach((url) => {
-        content += `<img
+      data.slice(0, 3).forEach((url) => {
+        content += `<div class="c-entries__image-wrap"><img
         src="${url}"
         alt="entry image"
-        class="c-entries__image"/>`;
+        class="c-entries__image"/></div>`;
       });
     }
     return content;
@@ -411,17 +418,56 @@ const DIARY_APP = (function () {
     //   // hideEntryDropdowns();
     //   // showEntryDropdown(target);
     // }
-    else if (
+    else if (target.classList.contains("l-main__viewer")) {
+      let viewer = target.querySelector(".c-viewer").id;
+      if (viewer == "text-viewer") {
+        closeTextViewer();
+      } else if (viewer == "image-viewer") {
+        closeImageViewer();
+      }
+    } else if (target.classList.contains("l-main__account")) {
+      closeAccountDisplay();
+    } else if (
       target.parentNode.id == "add-button" ||
       target.id == "add-button"
     ) {
-      showMenu();
+      toggleMenu();
       activeEntryMenu = null;
       hideEntryDropdowns();
     } else {
       activeEntryMenu = null;
       hideEntryDropdowns();
       hideMenu();
+    }
+  }
+
+  function closeEditor() {
+    let parentContainer = this.parentNode.parentNode;
+    // console.log(parentContainer);
+    switch (parentContainer.id) {
+      case "image-uploader":
+        closeImageUploader();
+        break;
+      case "text-editor":
+        closeTextEditor();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function closeViewer() {
+    let parentContainer = this.parentNode.parentNode;
+    // console.log(parentContainer);
+    switch (parentContainer.id) {
+      case "image-viewer":
+        closeImageViewer();
+        break;
+      case "text-viewer":
+        closeTextViewer();
+        break;
+      default:
+        break;
     }
   }
 
@@ -444,7 +490,7 @@ const DIARY_APP = (function () {
     });
   }
 
-  function showMenu() {
+  function toggleMenu() {
     addButton.classList.toggle("c-button--rotate");
     menu.classList.toggle(menu.classList[0] + "--visible");
     if (menu.classList.contains(menu.classList[0] + "--visible")) {
@@ -464,27 +510,24 @@ const DIARY_APP = (function () {
 
   function showAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
-    scrollPosition = window.scrollY;
+    bodyScrollSet();
     parentContainer.classList.add("l-main__account--visible");
     accountPopup.classList.add("c-account--visible");
-    document.body.classList.toggle("c-body--no-scroll");
-    document.body.style.top = -scrollPosition + "px";
   }
 
   function closeAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
     parentContainer.classList.remove("l-main__account--visible");
     accountPopup.classList.remove("c-account--visible");
+    bodyScrollRevert();
   }
 
   function showTextEditor() {
     let parentContainer = textEditor.parentNode;
-    scrollPosition = window.scrollY;
+    bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     textEditor.classList.add("c-entry-create--visible");
-    document.body.classList.toggle("c-body--no-scroll");
-    document.body.style.top = -scrollPosition + "px";
-    showMenu();
+    toggleMenu();
   }
 
   function closeTextEditor() {
@@ -494,16 +537,15 @@ const DIARY_APP = (function () {
     });
     parentContainer.classList.remove("l-main__editor--visible");
     textEditor.classList.remove("c-entry-create--visible");
+    bodyScrollRevert();
   }
 
   function showImageUploader() {
     let parentContainer = imageUploader.parentNode;
-    scrollPosition = window.scrollY;
+    bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     imageUploader.classList.add("c-entry-create--visible");
-    document.body.classList.toggle("c-body--no-scroll");
-    document.body.style.top = -scrollPosition + "px";
-    showMenu();
+    toggleMenu();
   }
 
   function closeImageUploader() {
@@ -515,28 +557,7 @@ const DIARY_APP = (function () {
       });
     parentContainer.classList.remove("l-main__editor--visible");
     imageUploader.classList.remove("c-entry-create--visible");
-  }
-
-  function closePopup() {
-    let parentContainer = this.parentNode.parentNode;
-    console.log(parentContainer);
-    switch (parentContainer.id) {
-      case "image-uploader":
-        closeImageUploader();
-        break;
-      case "text-editor":
-        closeTextEditor();
-        break;
-      case "text-viewer":
-        closeTextViewer();
-        break;
-      case "account-display":
-        closeAccountDisplay();
-      default:
-        break;
-    }
-    document.body.classList.remove("c-body--no-scroll");
-    window.scrollTo(0, scrollPosition);
+    bodyScrollRevert();
   }
 
   function pasteCatcher(event) {
@@ -562,9 +583,7 @@ const DIARY_APP = (function () {
     let itemDatetime = null;
     let itemEntry = null;
 
-    scrollPosition = window.scrollY;
-    document.body.classList.toggle("c-body--no-scroll");
-    document.body.style.top = -scrollPosition + "px";
+    bodyScrollSet();
 
     response.entries.forEach((date) => {
       date.dateEntries.forEach((entry) => {
@@ -577,7 +596,7 @@ const DIARY_APP = (function () {
     if (itemEntry.type == "text") {
       itemDatetime = new Date(itemEntry.time);
       entryTextTitle.innerText = itemEntry.title;
-      entryTextContent.innerText = itemEntry.content.content;
+      entryTextContent.innerText = itemEntry.content;
       entryTextDatetime.innerText = `${
         MONTHS_LONG[itemDatetime.getMonth()]
       } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
@@ -591,12 +610,73 @@ const DIARY_APP = (function () {
 
       textViewer.parentNode.classList.add("l-main__viewer--visible");
       textViewer.classList.add("c-viewer--visible");
+    } else {
+      let content = "";
+      itemDatetime = new Date(itemEntry.time);
+      entryImageTitle.innerText = itemEntry.title;
+      // entryImageContent.innerText = itemEntry.content.content;
+      entryImageDatetime.innerText = `${
+        MONTHS_LONG[itemDatetime.getMonth()]
+      } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+        "en-us",
+        {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }
+      )}`;
+
+      itemEntry.content.forEach((url) => {
+        content += `<li class="c-viewer__gallery-item"><img
+        src="${url}"
+        alt="entry image"
+        class="c-viewer__gallery-image"/></li>`;
+      });
+
+      entryImageContent.innerHTML = content;
+
+      imageViewer.parentNode.classList.add("l-main__viewer--visible");
+      imageViewer.classList.add("c-viewer--visible");
     }
   }
 
   function closeTextViewer() {
     textViewer.parentNode.classList.remove("l-main__viewer--visible");
     textViewer.classList.remove("c-viewer--visible");
+    bodyScrollRevert();
+  }
+
+  function closeImageViewer() {
+    imageViewer.parentNode.classList.remove("l-main__viewer--visible");
+    imageViewer.classList.remove("c-viewer--visible");
+    bodyScrollRevert();
+  }
+
+  function submitEntry() {
+    let editor = this.parentNode.parentNode;
+    let formData = new FormData();
+    let method = "POST";
+    let credentials = "include";
+    let headers = { "Content-Type": "application/json" };
+    let body = null;
+    if (editor.id == "text-editor") {
+      let jsonBody = {};
+      // let result = {};
+      formData.append("type", "text");
+      formData.append("title", textTitleInput.textContent);
+      formData.append("content", textBodyInput.innerText);
+      formData.forEach((value, key) => (jsonBody[key] = value));
+      body = JSON.stringify(jsonBody);
+
+      fetchJson("/entries", "POST", "include", body, headers).then((result) => {
+        console.log(result);
+        if (result.success) {
+          fetchJson(`/entries/${result.entryId}`, "GET", "include").then(
+            (data) => {}
+          );
+        }
+      });
+    }
   }
 
   async function fetchJson(
@@ -607,10 +687,26 @@ const DIARY_APP = (function () {
     headers = null
   ) {
     let response = null;
-    response = await fetch(link, { method, credentials });
+
+    if (body) {
+      response = await fetch(link, { method, body, credentials, headers });
+    } else {
+      response = await fetch(link, { method, credentials });
+    }
 
     const data = await response.json();
     return data;
+  }
+
+  function bodyScrollSet() {
+    scrollPosition = window.scrollY;
+    document.body.classList.toggle("c-body--no-scroll");
+    document.body.style.top = -scrollPosition + "px";
+  }
+
+  function bodyScrollRevert() {
+    document.body.classList.remove("c-body--no-scroll");
+    window.scrollTo(0, scrollPosition);
   }
 
   function addListeners() {
@@ -623,12 +719,15 @@ const DIARY_APP = (function () {
         showEntryDropdown.bind(this)(event);
       });
     });
-    // addButton.addEventListener("click", showMenu);
+    // addButton.addEventListener("click", toggleMenu);
     document.addEventListener("click", function (event) {
       checkTarget(event);
     });
     editorCloseButtons.forEach((button) => {
-      button.addEventListener("click", closePopup);
+      button.addEventListener("click", closeEditor);
+    });
+    editorDoneButtons.forEach((button) => {
+      button.addEventListener("click", submitEntry);
     });
     contentEditables.forEach((editable) => {
       editable.addEventListener("paste", function (event) {
@@ -637,7 +736,7 @@ const DIARY_APP = (function () {
     });
     accountCloseButton.addEventListener("click", closeAccountDisplay);
     viewerCloseButtons.forEach((button) => {
-      button.addEventListener("click", closePopup);
+      button.addEventListener("click", closeViewer);
     });
     accountButton.addEventListener("click", showAccountDisplay);
     imageAddButton.addEventListener("click", showImageUploader);

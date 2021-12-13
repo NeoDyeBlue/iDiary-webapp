@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { query } = require("express");
 const mysql = require("mysql2");
 
 const connection = mysql.createConnection({

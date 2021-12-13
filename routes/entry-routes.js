@@ -13,6 +13,15 @@ router.get("/all", user_auth, (req, res) => {
   entryController.entry_all(req, res);
 });
 
+router.get("/:entry", user_auth, (req, res) => {
+  console.log("called");
+  entryController.entry_read_one(req, res);
+});
+
+router.post("/", user_auth, (req, res) => {
+  entryController.entry_add(req, res);
+});
+
 function user_auth(req, res, next) {
   jwt.verify(req.cookies.token, process.env.JWT_AT_SECRET, (err, user) => {
     if (err) return res.redirect("/login");

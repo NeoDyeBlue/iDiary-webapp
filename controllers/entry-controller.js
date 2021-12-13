@@ -7,7 +7,7 @@ const entry_index = (req, res) => {
 
 const entry_all = (req, res) => {
   // let result = await entryDB.read(req.user.userId);
-  entryDB.read(req.user.userId).then((data) => {
+  entryDB.read_all(req.user.userId).then((data) => {
     // console.log(data);
     res.json(data);
   });
@@ -15,7 +15,22 @@ const entry_all = (req, res) => {
   // res.json({ result });
 };
 
+const entry_read_one = (req, res) => {
+  entryDB.read_one(req.user.userId, req.params.entry).then((data) => {
+    // console.log(data);
+    res.json(data);
+  });
+};
+
+const entry_add = (req, res) => {
+  entryDB.create(req.user.userId, req.body).then((data) => {
+    res.json(data);
+  });
+};
+
 module.exports = {
   entry_index,
   entry_all,
+  entry_read_one,
+  entry_add,
 };

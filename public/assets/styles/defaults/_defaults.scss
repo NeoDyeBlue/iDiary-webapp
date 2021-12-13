@@ -71,6 +71,11 @@ a {
   font-family: v.$header-font;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .material-icons {
   user-select: none;
   pointer-events: none;

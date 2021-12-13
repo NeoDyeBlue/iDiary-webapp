@@ -78,6 +78,11 @@ a {
   font-family: "Poppins", sans-serif;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .material-icons {
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -348,7 +353,7 @@ a {
   font-size: clamp(2rem, 5vw, 3rem);
 }
 .c-header--fluid-small {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-size: clamp(2rem, 5vw, 2.5rem);
 }
 .c-header--margin-bottom {
   margin-bottom: 0.5rem;
@@ -394,6 +399,13 @@ a {
 }
 .c-header--shadow {
   text-shadow: 0 1px 1px rgba(161, 172, 175, 0.11), 0 2px 2px rgba(161, 172, 175, 0.11), 0 4px 4px rgba(161, 172, 175, 0.11), 0 6px 8px rgba(161, 172, 175, 0.11), 0 8px 16px rgba(161, 172, 175, 0.11);
+}
+.c-header--break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+      -ms-hyphens: auto;
+          hyphens: auto;
 }
 
 .c-text {
