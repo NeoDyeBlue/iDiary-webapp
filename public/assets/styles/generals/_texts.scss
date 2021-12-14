@@ -3,6 +3,7 @@
 //header
 .c-header {
   color: v.$neutral-100;
+  // transition: color v.$anim-duration ease;
 
   &--small {
     font-size: v.$small;
@@ -38,6 +39,10 @@
 
   &--margin-bottom {
     margin-bottom: 0.5rem;
+  }
+
+  &--margin-bottom-30 {
+    margin-bottom: 0.3rem;
   }
 
   &--margin-top {
@@ -101,6 +106,14 @@
     word-wrap: break-word;
     hyphens: auto;
   }
+
+  &--hoverable {
+    cursor: pointer;
+    &:hover {
+      color: v.$neutral-500;
+      // text-decoration: underline;
+    }
+  }
 }
 
 //text
@@ -156,6 +169,10 @@
     font-weight: 300;
   }
 
+  &--bold {
+    font-weight: 700;
+  }
+
   &--text-center {
     text-align: center;
   }
@@ -167,6 +184,14 @@
   }
 
   //colors
+  &--neutral-300 {
+    color: v.$neutral-300;
+  }
+
+  &--neutral-400 {
+    color: v.$neutral-400;
+  }
+
   &--neutral-500 {
     color: v.$neutral-500;
   }
@@ -175,8 +200,24 @@
     color: v.$neutral-600;
   }
 
+  &--neutral-700 {
+    color: v.$neutral-700;
+  }
+
+  &--neutral-800 {
+    color: v.$neutral-800;
+  }
+
   &--neutral-900 {
     color: v.$neutral-900;
+  }
+
+  &--green-secondary-300 {
+    color: v.$green-secondary-300;
+  }
+
+  &--green-secondary-400 {
+    color: v.$green-secondary-400;
   }
 
   &--green-secondary-500 {

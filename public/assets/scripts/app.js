@@ -1,5 +1,11 @@
 // const e = require("express");
 
+// import e from "express";
+import {
+  generateEntries,
+  createDateEntries,
+} from "../../assets/scripts/modules/generator.js";
+
 const DIARY_APP = (function () {
   document.addEventListener("DOMContentLoaded", init);
 
@@ -41,6 +47,9 @@ const DIARY_APP = (function () {
   const EVENING = new Date().setHours(17, 0, 0);
   var dayPart = document.getElementById("day-part");
   var dateText = document.getElementById("date-today");
+  var quoteContainer = document.getElementById("quote-container");
+  var quoteText = document.getElementById("quote-text");
+  var quoteAuthor = document.getElementById("quote-author");
   //dom vars
   var accountButton = document.getElementById("account-show");
   var acctFirstNameEl = document.getElementById("acct-first-name");
@@ -60,8 +69,11 @@ const DIARY_APP = (function () {
   var textBodyInput = document.getElementById("text-body-input");
   var textEditor = document.getElementById("text-editor");
   var imageUploader = document.getElementById("image-uploader");
+  var imageInput = document.getElementById("image-file");
+  var imagePreviewer = document.getElementById("image-previewer");
   var editorCloseButtons = document.querySelectorAll(".js-editor-close");
   var editorDoneButtons = document.querySelectorAll(".js-editor-done");
+  var selectedFiles = [];
   //viewer vars
   var viewerCloseButtons = document.querySelectorAll(".js-viewer-close");
   var textViewer = document.getElementById("text-viewer");
@@ -135,10 +147,9 @@ const DIARY_APP = (function () {
   //   ],
   // };
 
-  var sampleResponse = null;
   var activeEntryMenu = null;
   var scrollPosition = null;
-  var response = null;
+  var apiResponse = null;
   //#endregion
 
   var menuTl = gsap.timeline({
@@ -148,10 +159,6 @@ const DIARY_APP = (function () {
     paused: true,
   });
 
-  var indicatorsTl = gsap.timeline({
-    scrollTrigger: {},
-  });
-
   function init() {
     fetchJson("/entries/all", "GET", "include").then((data) => {
       welcomeNameEl.innerText = data.user.firstName;
@@ -159,10 +166,18 @@ const DIARY_APP = (function () {
       acctLastNameEl.innerText = data.user.lastName;
       initializeClock();
       setInterval(updateClock, 1000);
-      generateEntries(data);
+      apiResponse = data;
+      mainList.innerHTML = generateEntries(data);
       addListeners();
       createGSAPAnims();
-      // console.log(sampleResponse.entries);
+      console.log(apiResponse);
+    });
+    fetchJson("https://quotes.rest/qod?language=en", "GET").then((data) => {
+      // console.log(data.contents.quotes.quote);
+
+      quoteText.innerText = data.contents.quotes[0].quote;
+      quoteAuthor.innerText = data.contents.quotes[0].author;
+      quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url("${data.contents.quotes[0].background}")`;
     });
   }
 
@@ -198,170 +213,16 @@ const DIARY_APP = (function () {
     dateText.innerText = date;
   }
 
-  function generateEntries(data) {
-    dateWrap = "";
-    response = data;
-    // console.log(data);
-    data.entries.forEach((dates) => {
-      let date = new Date(dates.date);
-      dateWrap += `<li class="c-entries__on-date">
-      <div class="c-entries__date-indicator">
-        <h2
-          class="c-header c-header--fluid-large c-header--neutral-500"
-        >
-          ${("0" + String(date.getDate())).slice(-2)}
-        </h2>
-        <div class="c-entries__month-year">
-          <p class="c-text c-text--neutral-500">${
-            MONTHS_SHORT[date.getMonth()]
-          }</p>
-          <p class="c-text c-text--neutral-500">${date.getFullYear()}</p>
-        </div>
-      </div>
-      <ul class="c-entries__date-entries">
-      ${createDateEntries(dates.dateEntries)}
-      </ul>
-    </li>`;
-    });
-    mainList.innerHTML = dateWrap;
-  }
-
-  function createDateEntries(data) {
-    // sampleResponse = data;
-    let listItems = "";
-    data.forEach((entry) => {
-      if (entry.type == "text") {
-        listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
-        <div class="c-entries__top">
-        <span
-          class="
-            material-icons
-            c-entries__content-icon c-entries__content-icon--blue
-          "
-        >
-          article
-        </span>
-        <div class="c-entries__menu">
-        <button
-          class="
-            c-button c-button--circle-small c-button--text-only c-button--text-black
-            js-entry-menu
-          "
-        >
-          <span class="material-icons"> more_vert </span>
-        </button>
-        <ul class="c-entries__dropdown">
-          <li class="c-entries__menu-item js-entry-edit">
-            <span class="material-icons c-entries__menu-item-icon">edit</span>
-            <p class="c-text">Edit</p>
-          </li>
-          <li class="c-entries__menu-item js-entry-delete">
-            <span class="material-icons c-entries__menu-item-icon">delete</span>
-            <p class="c-text">Delete</p>
-          </li>
-        </ul>
-      </div>
-        </div>
-        <div class="c-entries__title-time">
-          <h2 class="c-header c-header--x-large c-header--break-word c-header--margin-bottom">${
-            entry.title
-          }</h2>
-          <p class="c-text c-text--small c-text--neutral-500">
-            ${new Date(entry.time).toLocaleTimeString("en-us", {
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            })}
-          </p>
-        </div>
-        <div
-        class="
-          c-entries__content-wrap c-entries__content-wrap--text
-        "
-      >
-        ${createContent("text", entry.content)}
-      </div>
-      </li>`;
-      } else {
-        listItems += `<li data-id="${entry.entryId}" class="c-entries__item">
-        <div class="c-entries__top">
-        <span
-          class="
-            material-icons
-            c-entries__content-icon c-entries__content-icon--green
-          "
-        >
-          image
-        </span>
-        <div class="c-entries__menu">
-        <button
-          class="
-            c-button c-button--circle-small c-button--text-only c-button--text-black
-            js-entry-menu
-          "
-        >
-          <span class="material-icons"> more_vert </span>
-        </button>
-        <ul class="c-entries__dropdown">
-          <li class="c-entries__menu-item js-entry-edit">
-            <span class="material-icons c-entries__menu-item-icon">edit</span>
-            <p class="c-text">Edit</p>
-          </li>
-          <li class="c-entries__menu-item js-entry-delete">
-            <span class="material-icons c-entries__menu-item-icon">delete</span>
-            <p class="c-text">Delete</p>
-          </li>
-        </ul>
-      </div>
-        </div>
-        <div class="c-entries__title-time">
-          <h2 class="c-header c-header--x-large c-header--break-word c-header--margin-bottom">${
-            entry.title
-          }</h2>
-          <p class="c-text c-text--small c-text--neutral-500">
-          ${new Date(entry.time).toLocaleTimeString("en-us", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          })}
-          </p>
-        </div>
-        <div
-          class="
-            c-entries__content-wrap c-entries__content-wrap--image
-          "
-        >
-          ${createContent("image", entry.content)}
-        </div>
-      </li>`;
-      }
-    });
-    return listItems;
-  }
-
-  function createContent(type, data) {
-    let content = "";
-    if (type == "text") {
-      content += `
-      <p class="c-text c-entries__text">
-      ${data}
-      </p>`;
-    } else if (type == "image") {
-      data.slice(0, 3).forEach((url) => {
-        content += `<div class="c-entries__image-wrap"><img
-        src="${url}"
-        alt="entry image"
-        class="c-entries__image"/></div>`;
-      });
-    }
-    return content;
-  }
-
   function createGSAPAnims() {
+    gsapDatePins();
+
+    gsap.utils.toArray(menuItems).forEach((item) => {
+      menuTl.from(item, { opacity: 0, y: "10px" }, "-0.25");
+    });
+  }
+
+  function gsapDatePins() {
     let dateIndicator = document.querySelectorAll(".c-entries__date-indicator");
-    let entryItems = gsap.utils.toArray(
-      document.querySelectorAll(".c-entries__item")
-    );
     gsap.utils.toArray(dateIndicator).forEach((indicator, index) => {
       ScrollTrigger.create({
         trigger: indicator.parentNode,
@@ -370,32 +231,7 @@ const DIARY_APP = (function () {
         onEnter: () => {
           indicator.classList.add("c-entries__date-indicator--pin");
         },
-        // onLeave: () => {
-        //   indicator.classList.remove("c-entries__date-indicator--pin");
-        // },
-        // pin: indicator,
-        // pinSpacing: false,
       });
-    });
-
-    // .forEach((item) => {
-    //   gsap.from(item, {
-    //     scrollTrigger: {
-    //       trigger: item,
-    //       start: "top 80%",
-    //       // end: "bottom 80%",
-    //       // markers: true,
-    //       toggleActions: "play none none none",
-    //     },
-    //     yPercent: 10,
-    //     duration: 0.5,
-    //     ease: "slow",
-    //     opacity: 0,
-    //   });
-    // });
-
-    gsap.utils.toArray(menuItems).forEach((item) => {
-      menuTl.from(item, { opacity: 0, y: "10px" }, "-0.25");
     });
   }
 
@@ -409,16 +245,16 @@ const DIARY_APP = (function () {
       } else if (editor == "image-uploader") {
         closeImageUploader();
       }
-    }
-    // } else if (
-    //   target.parentNode.classList.contains("js-entry-menu") ||
-    //   target.classList.contains("js-entry-menu")
-    // ) {
-    //   hideMenu();
-    //   // hideEntryDropdowns();
-    //   // showEntryDropdown(target);
-    // }
-    else if (target.classList.contains("l-main__viewer")) {
+    } else if (target.classList.contains("js-entry-click")) {
+      activeEntryMenu = null;
+      hideMenu();
+      hideEntryDropdowns();
+      viewEntry(target);
+    } else if (target.classList.contains("js-entry-menu")) {
+      hideMenu();
+      hideEntryDropdowns();
+      showEntryDropdown(target);
+    } else if (target.classList.contains("l-main__viewer")) {
       let viewer = target.querySelector(".c-viewer").id;
       if (viewer == "text-viewer") {
         closeTextViewer();
@@ -471,12 +307,10 @@ const DIARY_APP = (function () {
     }
   }
 
-  function showEntryDropdown(event) {
+  function showEntryDropdown(target) {
     // console.log(target);
     hideMenu();
-    let dropdown = event.target.parentNode.querySelector(
-      ".c-entries__dropdown"
-    );
+    let dropdown = target.parentNode.querySelector(".c-entries__dropdown");
     activeEntryMenu = dropdown;
     hideEntryDropdowns();
     dropdown.classList.toggle("c-entries__dropdown--visible");
@@ -577,67 +411,72 @@ const DIARY_APP = (function () {
     // };
   }
 
-  function viewEntry() {
-    let item = this;
+  function viewEntry(item) {
+    // let item = item;
     let itemId = item.getAttribute("data-id");
     let itemDatetime = null;
     let itemEntry = null;
 
     bodyScrollSet();
 
-    response.entries.forEach((date) => {
-      date.dateEntries.forEach((entry) => {
-        if (entry.entryId == itemId) {
-          itemEntry = entry;
-        }
-      });
+    fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
+      itemEntry = data.entries[0].dateEntries[0];
+      if (itemEntry.type == "text") {
+        itemDatetime = new Date(itemEntry.time);
+        entryTextTitle.innerText = itemEntry.title;
+        entryTextContent.innerText = itemEntry.content;
+        entryTextDatetime.innerText = `${
+          MONTHS_LONG[itemDatetime.getMonth()]
+        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+          "en-us",
+          {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          }
+        )}`;
+
+        textViewer.parentNode.classList.add("l-main__viewer--visible");
+        textViewer.classList.add("c-viewer--visible");
+      } else {
+        let content = "";
+        itemDatetime = new Date(itemEntry.time);
+        entryImageTitle.innerText = itemEntry.title;
+        // entryImageContent.innerText = itemEntry.content.content;
+        entryImageDatetime.innerText = `${
+          MONTHS_LONG[itemDatetime.getMonth()]
+        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+          "en-us",
+          {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          }
+        )}`;
+
+        itemEntry.content.forEach((url) => {
+          content += `<li class="c-viewer__gallery-item"><img
+          src="${url}"
+          alt="entry image"
+          class="c-viewer__gallery-image"/></li>`;
+        });
+
+        entryImageContent.innerHTML = content;
+
+        imageViewer.parentNode.classList.add("l-main__viewer--visible");
+        imageViewer.classList.add("c-viewer--visible");
+      }
     });
+
+    // apiResponse.entries.forEach((date) => {
+    //   date.dateEntries.forEach((entry) => {
+    //     if (entry.entryId == itemId) {
+    //       itemEntry = entry;
+    //     }
+    //   });
+    // });
+
     // console.log(itemEntry);
-    if (itemEntry.type == "text") {
-      itemDatetime = new Date(itemEntry.time);
-      entryTextTitle.innerText = itemEntry.title;
-      entryTextContent.innerText = itemEntry.content;
-      entryTextDatetime.innerText = `${
-        MONTHS_LONG[itemDatetime.getMonth()]
-      } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
-        "en-us",
-        {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        }
-      )}`;
-
-      textViewer.parentNode.classList.add("l-main__viewer--visible");
-      textViewer.classList.add("c-viewer--visible");
-    } else {
-      let content = "";
-      itemDatetime = new Date(itemEntry.time);
-      entryImageTitle.innerText = itemEntry.title;
-      // entryImageContent.innerText = itemEntry.content.content;
-      entryImageDatetime.innerText = `${
-        MONTHS_LONG[itemDatetime.getMonth()]
-      } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
-        "en-us",
-        {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        }
-      )}`;
-
-      itemEntry.content.forEach((url) => {
-        content += `<li class="c-viewer__gallery-item"><img
-        src="${url}"
-        alt="entry image"
-        class="c-viewer__gallery-image"/></li>`;
-      });
-
-      entryImageContent.innerHTML = content;
-
-      imageViewer.parentNode.classList.add("l-main__viewer--visible");
-      imageViewer.classList.add("c-viewer--visible");
-    }
   }
 
   function closeTextViewer() {
@@ -652,11 +491,34 @@ const DIARY_APP = (function () {
     bodyScrollRevert();
   }
 
+  function previewImages() {
+    let images = this.files;
+    Array.from(images).forEach((image) => {
+      selectedFiles.push(image);
+
+      let previewWrapper = document.createElement("li");
+      previewWrapper.classList.add("c-editor__upload-item");
+      let template = `
+      <button class="c-editor__remove">
+      <span class="material-icons"> remove </span>
+      </button>
+      <img
+      src="${URL.createObjectURL(image)}"
+      alt="test image"
+      class="c-editor__image-item"/>
+      `;
+      previewWrapper.innerHTML = template;
+
+      imagePreviewer.appendChild(previewWrapper);
+    });
+    console.log(images);
+    console.log("called");
+    console.log(selectedFiles);
+  }
+
   function submitEntry() {
     let editor = this.parentNode.parentNode;
     let formData = new FormData();
-    let method = "POST";
-    let credentials = "include";
     let headers = { "Content-Type": "application/json" };
     let body = null;
     if (editor.id == "text-editor") {
@@ -669,14 +531,57 @@ const DIARY_APP = (function () {
       body = JSON.stringify(jsonBody);
 
       fetchJson("/entries", "POST", "include", body, headers).then((result) => {
-        console.log(result);
         if (result.success) {
-          fetchJson(`/entries/${result.entryId}`, "GET", "include").then(
-            (data) => {}
-          );
+          createEntry(result.entryId);
         }
       });
     }
+  }
+
+  function createEntry(entryId) {
+    fetchJson(`/entries/${entryId}`, "GET", "include").then((data) => {
+      let firstListItem = mainList.querySelector(".c-entries__on-date");
+      let newItem = null;
+
+      if (firstListItem) {
+        let dateAttr = new Date(
+          Number(firstListItem.getAttribute("data-date"))
+        );
+
+        if (
+          dateAttr.toLocaleDateString() ==
+          new Date(data.entries[0].date).toLocaleDateString()
+        ) {
+          newItem = new DOMParser()
+            .parseFromString(
+              createDateEntries(data.entries[0].dateEntries),
+              "text/html"
+            )
+            .body.querySelector(".c-entries__item");
+
+          firstListItem
+            .querySelector(".c-entries__date-entries")
+            .prepend(newItem);
+        } else {
+          newItem = new DOMParser()
+            .parseFromString(generateEntries(data), "text/html")
+            .body.querySelector(".c-entries__on-date");
+
+          mainList.prepend(newItem);
+          gsapDatePins();
+        }
+      } else {
+        newItem = new DOMParser()
+          .parseFromString(generateEntries(data), "text/html")
+          .body.querySelector(".c-entries__on-date");
+
+        console.log(newItem);
+
+        mainList.prepend(newItem);
+        gsapDatePins();
+      }
+      closeTextEditor();
+    });
   }
 
   async function fetchJson(
@@ -690,8 +595,10 @@ const DIARY_APP = (function () {
 
     if (body) {
       response = await fetch(link, { method, body, credentials, headers });
-    } else {
+    } else if (credentials) {
       response = await fetch(link, { method, credentials });
+    } else {
+      response = await fetch(link, { method });
     }
 
     const data = await response.json();
@@ -710,15 +617,15 @@ const DIARY_APP = (function () {
   }
 
   function addListeners() {
-    document.querySelectorAll(".c-entries__item").forEach((item) => {
-      item.addEventListener("click", viewEntry);
-    });
-    document.querySelectorAll(".js-entry-menu").forEach((menu) => {
-      menu.addEventListener("click", function (event) {
-        event.stopPropagation();
-        showEntryDropdown.bind(this)(event);
-      });
-    });
+    // document.querySelectorAll(".c-entries__item").forEach((item) => {
+    //   item.addEventListener("click", viewEntry);
+    // });
+    // document.querySelectorAll(".js-entry-menu").forEach((menu) => {
+    //   menu.addEventListener("click", function (event) {
+    //     event.stopPropagation();
+    //     showEntryDropdown.bind(this)(event);
+    //   });
+    // });
     // addButton.addEventListener("click", toggleMenu);
     document.addEventListener("click", function (event) {
       checkTarget(event);
@@ -729,6 +636,7 @@ const DIARY_APP = (function () {
     editorDoneButtons.forEach((button) => {
       button.addEventListener("click", submitEntry);
     });
+    imageInput.addEventListener("change", previewImages);
     contentEditables.forEach((editable) => {
       editable.addEventListener("paste", function (event) {
         pasteCatcher.bind(this)(event);

@@ -10,7 +10,7 @@ const entryRoutes = require("./routes/entry-routes");
 const app = express();
 const port = 3000;
 
-// console.log(bcrypt.hashSync("password123", 10));
+// console.log(bcrypt.hashSync("passwordtest", 10));
 // app.use(express.json());
 // for parsing application/json
 app.use(bodyParser.json());

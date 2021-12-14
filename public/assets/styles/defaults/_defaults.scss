@@ -9,6 +9,24 @@
   color: v.$neutral-200;
 }
 
+// ::-webkit-scrollbar {
+//   width: 10px;
+//   height: 10px;
+// }
+
+// ::-webkit-scrollbar-track {
+//   background-color: v.$neutral-800;
+// }
+
+// ::-webkit-scrollbar-thumb {
+//   background-color: v.$neutral-700;
+//   border-radius: 10px;
+
+//   &:hover {
+//     background-color: v.$neutral-600;
+//   }
+// }
+
 [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   pointer-events: none;

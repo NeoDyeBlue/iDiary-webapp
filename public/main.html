@@ -66,13 +66,13 @@
       <div class="l-main__sidebar">
         <div class="c-sidebar">
           <div class="c-intro">
-            <h2 class="c-header c-header--fluid-small c-header--margin-bottom">
+            <h2 class="c-header c-header--xx-large c-header--margin-bottom">
               Good <span id="day-part">day</span>
               <span class="c-header--blue-primary-500" id="user-first-name"
                 >---</span
               >!
             </h2>
-            <p class="c-text c-text--neutral-500">
+            <p class="c-text c-text--neutral-300">
               Today is <span id="date-today">---</span>
             </p>
           </div>
@@ -102,18 +102,19 @@
               </span>
             </button>
           </div> -->
-          <div class="c-quote">
-            <p class="c-text c-text--thin c-text--italic c-text--white">
-              " There are only two ways to live your life. One is as though
-              nothing is a miracle. The other is as though everything is a
-              miracle. "
+          <div class="c-quote" id="quote-container">
+            <p
+              class="c-text c-text--thin c-text--italic c-text--white"
+              id="quote-text"
+            >
+              ---
             </p>
             <h4
               class="
                 c-header c-header--margin-top c-header--italic c-header--white
               "
             >
-              ― Albert Einstein
+              ― <span id="quote-author">---</span>
             </h4>
           </div>
           <!-- <div class="c-bottom">
@@ -205,9 +206,9 @@
                 contenteditable="true"
                 placeholder="Title Here..."
               ></div>
-              <ul class="c-editor__image-upload">
+              <ul class="c-editor__image-upload" id="image-previewer">
                 <li class="c-editor__upload-item">
-                  <label for="file" class="c-editor__choose-button">
+                  <label for="image-file" class="c-editor__choose-button">
                     <input
                       class="
                         c-editor__image-input c-editor__image-input--hidden
@@ -217,7 +218,7 @@
                       multiple
                       accept="image/gif, image/jpeg, image/png"
                       name="image"
-                      id="file"
+                      id="image-file"
                     />
                     <span class="material-icons c-editor__choose-icon"
                       >add_a_photo</span
@@ -267,7 +268,9 @@
             </p>
           </div>
           <div class="c-viewer__content">
-            <p id="text-entry-content" class="c-text">Content goes here</p>
+            <p id="text-entry-content" class="c-text c-text--neutral-300">
+              Content goes here
+            </p>
           </div>
         </div>
       </div>
@@ -500,6 +503,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/ScrollTrigger.min.js"></script>
-    <script src="assets/scripts/app.js"></script>
+    <script type="module" src="assets/scripts/app.js"></script>
   </body>
 </html>

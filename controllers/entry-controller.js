@@ -22,8 +22,8 @@ const entry_read_one = (req, res) => {
   });
 };
 
-const entry_add = (req, res) => {
-  entryDB.create(req.user.userId, req.body).then((data) => {
+const entry_add_text = (req, res) => {
+  entryDB.create_text(req.user.userId, req.body).then((data) => {
     res.json(data);
   });
 };
@@ -32,5 +32,5 @@ module.exports = {
   entry_index,
   entry_all,
   entry_read_one,
-  entry_add,
+  entry_add_text,
 };

@@ -171,7 +171,7 @@
   // margin: clamp(-1.3rem, -8vw, -1rem) clamp(-1.3rem, -8vw, -1rem) 0
   //   clamp(-1.3rem, -8vw, -1rem);
   padding: 0.1rem v.$fluid-pad-mar;
-  // border-bottom: 1px solid v.$neutral-700;
+  // border-bottom: 2px solid v.$blue-primary-500;
   box-shadow: v.$short-shadow-neutral-600;
 
   // @media screen and (min-width: v.$laptop) {
@@ -226,6 +226,7 @@
   flex-direction: column;
   margin: 0;
   padding: v.$fluid-pad-mar;
+  overflow-y: scroll;
   // background-color: white;
   // box-shadow: v.$short-shadow-neutral-600;
 
@@ -299,12 +300,13 @@
   align-items: flex-start;
   height: 100%;
   width: 100%;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0.3) 100%
-    ),
-    url("../images/2019-10-21_14.27.00.png");
+  // background-image: linear-gradient(
+  //     0deg,
+  //     rgba(0, 0, 0, 0.3) 0%,
+  //     rgba(0, 0, 0, 0.3) 100%
+  //   ),
+  //   url("../images/2019-10-21_14.27.00.png");
+  // background-color: v.$;
   background-repeat: no-repeat;
   background-size: cover;
   // background-color: v.$neutral-400;
@@ -325,7 +327,6 @@
   align-items: flex-start;
   padding: v.$fluid-pad-mar;
   // border-top: 1px solid v.$neutral-700;
-  // border-bottom: 1px solid v.$neutral-700;
 
   &__list {
     display: flex;
@@ -341,7 +342,16 @@
     grid-template-columns: auto 1fr;
     width: 100%;
     // padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
+    // margin-bottom: 1rem;
+    // border-bottom: 2px solid v.$neutral-800;
+
+    // &:nth-child(odd) {
+    //   border-bottom: 2px solid v.$blue-primary-800;
+    // }
+
+    // &:nth-child(even) {
+    //   border-bottom: 2px solid v.$green-secondary-800;
+    // }
 
     @media screen and (min-width: v.$laptop) {
       column-gap: 2rem;
@@ -386,13 +396,14 @@
     flex-direction: column;
     width: 100%;
     grid-column: 2 / -1;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid v.$neutral-800;
+    // padding-bottom: 0.5rem;
+    // border-bottom: 2px solid v.$neutral-800;
 
     @media screen and (min-width: v.$laptop) {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       column-gap: 1rem;
+      // transition: grid-template v.$anim-duration ease;
     }
     // justify-content: flex-start;
     // align-items: flex-start;
@@ -402,7 +413,7 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    cursor: pointer;
+    // cursor: pointer;
     overflow: hidden;
     position: relative;
     border-radius: v.$border-radius;
@@ -412,30 +423,16 @@
     padding: 1rem;
     min-height: 250px;
     // max-height: 350px;
-    transition: transform v.$anim-duration ease;
-
-    // &--article {
-    //   grid-column: span 2;
-    // }
-
-    // &--green-border {
-    //   border-right: 3px solid v.$green-secondary-500;
-    // }
-
-    // @media screen and (min-width: v.$laptop) {
-    //   max-height: 400px;
-    // }
-
-    // &:active {
-    //   transform: scale(0.95);
-    // }
+    transition: transform v.$anim-duration ease, border v.$anim-duration ease,
+      box-shadow v.$anim-duration ease;
   }
 
   &__top {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    pointer-events: none;
   }
 
   &__content-icon {
@@ -455,9 +452,12 @@
 
   &__menu {
     display: flex;
-    position: relative;
+    position: absolute;
+    top: v.$fluid-pad-mar;
+    right: v.$fluid-pad-mar;
     align-items: center;
     justify-content: center;
+    z-index: 2;
   }
 
   &__dropdown {
@@ -488,7 +488,7 @@
     align-items: center;
     justify-content: flex-start;
     min-width: 100px;
-    padding: 0.5rem;
+    padding: 0.85rem;
     cursor: pointer;
 
     &:hover {
@@ -503,11 +503,32 @@
   &__menu-item-icon {
     color: v.$neutral-100;
     margin-right: 0.5rem;
+
+    &--red {
+      color: v.$red;
+    }
   }
 
   &__title-time {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    // padding-bottom: 1rem;
     margin: 1.5rem 0 1.5rem 0;
-    pointer-events: none;
+    // pointer-events: none;
+
+    &--border-green {
+      border-bottom: 2px solid v.$green-secondary-800;
+    }
+
+    &--border-blue {
+      border-bottom: 2px solid v.$blue-primary-500;
+    }
+
+    &--border-gray {
+      border-bottom: 2px solid v.$neutral-800;
+    }
   }
 
   &__content-wrap {
@@ -516,8 +537,13 @@
     height: 100%;
 
     &--text {
-      max-height: 150px;
+      // max-height: 100px;
+      min-height: 130px;
       overflow: hidden;
+      pointer-events: none;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
     }
     &--image {
       // min-height: 100%;
@@ -566,9 +592,10 @@
     // background-color: v.$neutral-800;
     border-top: none;
     border-bottom: none;
-    // border-left: 1px solid v.$neutral-700;
+    // border-right: 2px solid v.$neutral-800;
+    // border-left: 2px solid v.$neutral-800;
     // border-right: 1px solid v.$neutral-700;
-    padding: v.$fluid-pad-mar 0;
+    padding: v.$fluid-pad-mar 0 v.$fluid-pad-mar v.$fluid-pad-mar;
   }
 }
 
@@ -843,8 +870,8 @@
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: v.$border-radius;
-    overflow: hidden;
+    // border-radius: v.$border-radius;
+    // overflow: hidden;
 
     &::before {
       content: "";
@@ -890,21 +917,25 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    border: 1px solid v.$neutral-600;
     transform: translate(-50%, -50%);
+    z-index: 1;
   }
 
   &__remove {
     display: flex;
     border: 0;
-    background-color: transparent;
+    background-color: rgba($color: v.$neutral-100, $alpha: 0.5);
+    border-radius: 50%;
     justify-content: center;
     align-items: center;
     position: absolute;
     color: white;
     cursor: pointer;
-    text-shadow: v.$short-shadow-neutral-600;
+    // text-shadow: v.$short-shadow-neutral-600;
     top: 0.5rem;
     right: 0.5rem;
+    z-index: 3;
   }
 
   &__image-input {

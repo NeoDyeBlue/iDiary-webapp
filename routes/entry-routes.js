@@ -19,7 +19,7 @@ router.get("/:entry", user_auth, (req, res) => {
 });
 
 router.post("/", user_auth, (req, res) => {
-  entryController.entry_add(req, res);
+  entryController.entry_add_text(req, res);
 });
 
 function user_auth(req, res, next) {

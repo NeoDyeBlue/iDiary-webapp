@@ -83,7 +83,7 @@ async function read_all(userId) {
 }
 
 async function read_one(userId, entryId) {
-  let final = { success: false };
+  let final = {};
   try {
     let query = `SELECT entry.EntryID, entry.EntryDateTime, entry.EntryTitle, entry.ContentType, entry.EntryContent 
     FROM entry WHERE EntryUserID = ${userId} AND EntryID = ${entryId}`;
@@ -96,27 +96,32 @@ async function read_one(userId, entryId) {
         let [day, month, year] = initialDate;
         let date = new Date(`${year}-${month}-${day}`).getTime();
         let time = new Date(datetime).getTime();
-        final.success = true;
-        final.result = {
-          entryId: data[0].entryID,
-          date,
-          time,
-          type: data[0].ContentType,
-          title: data[0].EntryTitle,
-          content: JSON.parse(data[0].EntryContent).content,
-        };
+        final.entries = [
+          {
+            date,
+            dateEntries: [
+              {
+                entryId: data[0].EntryID,
+                title: data[0].EntryTitle,
+                time,
+                type: data[0].ContentType,
+                content: JSON.parse(data[0].EntryContent).content,
+              },
+            ],
+          },
+        ];
       })
       .catch((err) => {
-        final.error = JSON.parse(err);
+        final.success = false;
       });
   } catch (err) {
-    final.error = JSON.parse(err);
+    final.success = false;
   }
   console.log(final);
   return final;
 }
 
-async function create(userId, body) {
+async function create_text(userId, body) {
   let final = { success: false };
   try {
     let content = JSON.stringify({ content: body.content });
@@ -133,14 +138,6 @@ async function create(userId, body) {
       .catch((err) => {
         final.error = JSON.parse(err);
       });
-    // let [data] = await db.execute(query, values);
-
-    // try {
-    //   final.success = true;
-    //   final.entryId = data.insertId;
-    // } catch (err) {
-    //   final.error = err;
-    // }
   } catch (err) {
     final.error = JSON.parse(err);
   }
@@ -150,5 +147,5 @@ async function create(userId, body) {
 module.exports = {
   read_all,
   read_one,
-  create,
+  create_text,
 };
