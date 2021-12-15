@@ -23,7 +23,8 @@ const entry_read_one = (req, res) => {
 };
 
 const entry_add_text = (req, res) => {
-  entryDB.create_text(req.user.userId, req.body).then((data) => {
+  console.log(req.fields);
+  entryDB.create_text(req.user.userId, req.fields).then((data) => {
     res.json(data);
   });
 };

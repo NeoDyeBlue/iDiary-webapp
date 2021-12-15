@@ -185,7 +185,7 @@ const DIARY_APP = (function () {
 
         quoteText.innerText = data.contents.quotes[0].quote;
         quoteAuthor.innerText = data.contents.quotes[0].author;
-        quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url("${data.contents.quotes[0].background}")`;
+        // quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%), url("${data.contents.quotes[0].background}")`;
       })
       .catch((err) => {
         console.log(err);

@@ -83,7 +83,7 @@ function createDateEntries(data) {
           }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
         entry.title
       }</h2>
-          <p class="c-text c-text--small c-text--green-secondary-500 c-text--bold">
+          <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
             ${new Date(entry.time).toLocaleTimeString("en-us", {
               hour: "numeric",
               minute: "numeric",
@@ -137,7 +137,7 @@ function createDateEntries(data) {
           }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
         entry.title
       }</h2>
-          <p class="c-text c-text--small c-text--blue-primary-500 c-text--bold">
+          <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
           ${new Date(entry.time).toLocaleTimeString("en-us", {
             hour: "numeric",
             minute: "numeric",

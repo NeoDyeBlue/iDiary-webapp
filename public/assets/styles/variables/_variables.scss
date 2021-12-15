@@ -62,14 +62,14 @@ $neutral-800: #f1f3f3;
 $neutral-900: #f9fafa;
 //colors-gradient
 $blue-green-grad: linear-gradient(
-  250deg,
+  0deg,
   rgba(
-      $color: $green-secondary-700,
+      $color: $green-secondary-600,
       $alpha: 1,
     )
     0%,
   rgba(
-      $color: $blue-primary-700,
+      $color: $blue-primary-600,
       $alpha: 1,
     )
     100%

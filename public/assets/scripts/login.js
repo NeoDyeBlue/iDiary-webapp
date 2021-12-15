@@ -27,28 +27,27 @@ const LOGIN = (function () {
     formData.forEach((value, key) => (body[key] = value));
     let jsonBody = JSON.stringify(body);
 
-    // console.log(JSON.stringify(formData));
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0], pair[1]);
-    // }
-
     emailErrElement.classList.remove("c-form__error--visible");
     emailInput.classList.remove("c-form__input--border-red");
     passwordErrElement.classList.remove("c-form__error--visible");
     passwordInput.classList.remove("c-form__input--border-red");
 
-    fetchJson(LINK, method, jsonBody, headers).then((data) => {
-      console.log(data);
-      if (!data.auth.a1) {
-        emailErrElement.classList.add("c-form__error--visible");
-        emailInput.classList.add("c-form__input--border-red");
-      } else if (!data.auth.a2) {
-        passwordErrElement.classList.add("c-form__error--visible");
-        passwordInput.classList.add("c-form__input--border-red");
-      } else {
-        window.location.href = "/entries";
-      }
-    });
+    fetchJson(LINK, method, jsonBody, headers)
+      .then((data) => {
+        console.log(data);
+        if (!data.auth.a1) {
+          emailErrElement.classList.add("c-form__error--visible");
+          emailInput.classList.add("c-form__input--border-red");
+        } else if (!data.auth.a2) {
+          passwordErrElement.classList.add("c-form__error--visible");
+          passwordInput.classList.add("c-form__input--border-red");
+        } else {
+          window.location.href = "/entries";
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     // return false;
   }
 

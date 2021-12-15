@@ -351,8 +351,17 @@ img {
 .c-header--blue-primary-500 {
   color: #11b5e4;
 }
+.c-header--blue-primary-600 {
+  color: #33c6f0;
+}
+.c-header--blue-primary-700 {
+  color: #62d3f3;
+}
 .c-header--green-secondary-500 {
   color: #0aec4f;
+}
+.c-header--green-secondary-700 {
+  color: #64f18f;
 }
 .c-header--center {
   text-align: center;
@@ -458,8 +467,17 @@ img {
 .c-text--green-secondary-500 {
   color: #0aec4f;
 }
+.c-text--green-secondary-700 {
+  color: #64f18f;
+}
 .c-text--blue-primary-500 {
   color: #11b5e4;
+}
+.c-text--blue-primary-600 {
+  color: #33c6f0;
+}
+.c-text--blue-primary-700 {
+  color: #62d3f3;
 }
 .c-text--white {
   color: white;
