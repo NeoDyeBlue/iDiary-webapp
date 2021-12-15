@@ -21,6 +21,10 @@
     background-color: v.$blue-secondary-300;
   }
 
+  &:disabled {
+    background-color: v.$blue-secondary-700;
+  }
+
   &__icon {
     &--font-36 {
       font-size: 36px;

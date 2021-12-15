@@ -19,7 +19,12 @@ router.get("/:entry", user_auth, (req, res) => {
 });
 
 router.post("/", user_auth, (req, res) => {
+  console.log("post text");
   entryController.entry_add_text(req, res);
+});
+
+router.post("/upload", user_auth, (req, res) => {
+  entryController.entry_upload_images(req, res);
 });
 
 function user_auth(req, res, next) {

@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const formidable = require("express-formidable");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -15,6 +16,7 @@ const port = 3000;
 // for parsing application/json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(formidable({ multiples: true }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "/public")));

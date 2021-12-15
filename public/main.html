@@ -59,16 +59,22 @@
               <span id="acct-first-name">---</span>
               <span id="acct-last-name">---</span>
             </p>
-            <div class="c-account-button__image"></div>
+            <img src="" class="c-account-button__image" id="profile-thumb"></img>
           </div>
         </div>
       </div>
       <div class="l-main__sidebar">
         <div class="c-sidebar">
           <div class="c-intro">
-            <h2 class="c-header c-header--xx-large c-header--margin-bottom">
+            <h2
+              class="
+                c-header
+                c-header--xx-large
+                c-header--margin-bottom
+              "
+            >
               Good <span id="day-part">day</span>
-              <span class="c-header--blue-primary-500" id="user-first-name"
+              <span class="c-header--blue-primary-500 c-header--break-word" id="user-first-name"
                 >---</span
               >!
             </h2>
@@ -107,14 +113,14 @@
               class="c-text c-text--thin c-text--italic c-text--white"
               id="quote-text"
             >
-              ---
+              
             </p>
             <h4
               class="
                 c-header c-header--margin-top c-header--italic c-header--white
               "
             >
-              ― <span id="quote-author">---</span>
+              ― <span id="quote-author"></span>
             </h4>
           </div>
           <!-- <div class="c-bottom">
@@ -197,7 +203,7 @@
           <div class="c-entry-create__editor">
             <div class="c-editor">
               <div
-                id="image-title-input"
+                id="album-title-input"
                 class="
                   c-editor__title-input
                   c-editor__title-input--border-bottom-green
@@ -225,21 +231,13 @@
                     >
                   </label>
                 </li>
-                <!-- <div class="c-editor__image-wrap">
-                  <button class="c-editor__remove">
-                    <span class="material-icons"> remove </span>
-                  </button>
-                  <img
-                    src="./images/vector-parallax/mountains.png"
-                    alt="test image"
-                    class="c-editor__image-item"
-                  />
-                </div> -->
               </ul>
             </div>
           </div>
           <div class="c-entry-create__bottom">
-            <button class="c-button js-editor-done">Done</button>
+            <button disabled class="c-button js-editor-done" id="images-submit">
+              Done
+            </button>
           </div>
         </div>
       </div>
@@ -370,9 +368,10 @@
             <div class="c-account__info">
               <label for="image" class="c-account__choose-photo">
                 <img
-                  src="https://res.cloudinary.com/dppgyhery/image/upload/q_auto/v1631456012/samples/people/smiling-man.jpg"
+                  src=""
                   alt="account image"
                   class="c-account__profile-image"
+                  id="profile-image"
                 />
                 <input
                   class="c-account__image-input c-account__image-input--hidden"

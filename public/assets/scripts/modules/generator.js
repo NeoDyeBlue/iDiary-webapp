@@ -16,7 +16,7 @@ const MONTHS_SHORT = [
 function generateEntries(data) {
   let dateWrap = "";
   //   response = data;
-  // console.log(data);
+  console.log(data);
   data.entries.forEach((dates) => {
     let date = new Date(dates.date);
     dateWrap += `<li data-date='${dates.date}' class="c-entries__on-date">
@@ -173,9 +173,10 @@ function createContent(type, data) {
       ${snippet}
       </p>`;
   } else if (type == "image") {
-    data.slice(0, 3).forEach((url) => {
-      content += `<div class="c-entries__image-wrap"><img
-        src="${url}"
+    console.log(data);
+    data.slice(0, 3).forEach((img) => {
+      content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+        src="${img.url}"
         alt="entry image"
         class="c-entries__image"/></div>`;
     });

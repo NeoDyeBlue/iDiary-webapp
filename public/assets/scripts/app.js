@@ -52,6 +52,7 @@ const DIARY_APP = (function () {
   var quoteAuthor = document.getElementById("quote-author");
   //dom vars
   var accountButton = document.getElementById("account-show");
+  var acctProfileThumb = document.getElementById("profile-thumb");
   var acctFirstNameEl = document.getElementById("acct-first-name");
   var acctLastNameEl = document.getElementById("acct-last-name");
   var welcomeNameEl = document.getElementById("user-first-name");
@@ -61,7 +62,6 @@ const DIARY_APP = (function () {
   var imageAddButton = document.getElementById("image-add-button");
   var contentEditables = document.querySelectorAll(".js-editor-editable");
   var menu = document.getElementById("menu-slide");
-  var accountCloseButton = document.querySelector(".js-account-close");
   var menuItems = document.querySelectorAll(".c-nav__button-item");
   var mainList = document.getElementById("main-list");
   //editor vars
@@ -69,10 +69,12 @@ const DIARY_APP = (function () {
   var textBodyInput = document.getElementById("text-body-input");
   var textEditor = document.getElementById("text-editor");
   var imageUploader = document.getElementById("image-uploader");
+  var albumTitleInput = document.getElementById("album-title-input");
   var imageInput = document.getElementById("image-file");
   var imagePreviewer = document.getElementById("image-previewer");
   var editorCloseButtons = document.querySelectorAll(".js-editor-close");
   var editorDoneButtons = document.querySelectorAll(".js-editor-done");
+  var imageSubmitButton = document.getElementById("images-submit");
   var selectedFiles = [];
   //viewer vars
   var viewerCloseButtons = document.querySelectorAll(".js-viewer-close");
@@ -84,6 +86,9 @@ const DIARY_APP = (function () {
   var entryImageTitle = document.getElementById("image-entry-title");
   var entryImageContent = document.getElementById("image-entry-content");
   var entryImageDatetime = document.getElementById("image-entry-datetime");
+  //account view
+  var accountCloseButton = document.querySelector(".js-account-close");
+  var accountImageChange = document.getElementById("profile-image");
 
   // var sampleResponse = {
   //   user: {
@@ -162,6 +167,8 @@ const DIARY_APP = (function () {
   function init() {
     fetchJson("/entries/all", "GET", "include").then((data) => {
       welcomeNameEl.innerText = data.user.firstName;
+      acctProfileThumb.src = data.user.image;
+      accountImageChange.src = data.user.image;
       acctFirstNameEl.innerText = data.user.firstName;
       acctLastNameEl.innerText = data.user.lastName;
       initializeClock();
@@ -172,13 +179,17 @@ const DIARY_APP = (function () {
       createGSAPAnims();
       console.log(apiResponse);
     });
-    fetchJson("https://quotes.rest/qod?language=en", "GET").then((data) => {
-      // console.log(data.contents.quotes.quote);
+    fetchJson("https://quotes.rest/qod?language=en", "GET")
+      .then((data) => {
+        // console.log(data.contents.quotes.quote);
 
-      quoteText.innerText = data.contents.quotes[0].quote;
-      quoteAuthor.innerText = data.contents.quotes[0].author;
-      quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url("${data.contents.quotes[0].background}")`;
-    });
+        quoteText.innerText = data.contents.quotes[0].quote;
+        quoteAuthor.innerText = data.contents.quotes[0].author;
+        quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url("${data.contents.quotes[0].background}")`;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function initializeClock() {
@@ -238,6 +249,7 @@ const DIARY_APP = (function () {
   function checkTarget(event) {
     let target = event.target;
     // console.log(target);
+    // outside editor click
     if (target.classList.contains("l-main__editor")) {
       let editor = target.querySelector(".c-entry-create").id;
       if (editor == "text-editor") {
@@ -245,32 +257,49 @@ const DIARY_APP = (function () {
       } else if (editor == "image-uploader") {
         closeImageUploader();
       }
-    } else if (target.classList.contains("js-entry-click")) {
+    }
+    //entry click
+    else if (target.classList.contains("js-entry-click")) {
       activeEntryMenu = null;
       hideMenu();
       hideEntryDropdowns();
       viewEntry(target);
-    } else if (target.classList.contains("js-entry-menu")) {
+    }
+    //entry menu click
+    else if (target.classList.contains("js-entry-menu")) {
       hideMenu();
       hideEntryDropdowns();
       showEntryDropdown(target);
-    } else if (target.classList.contains("l-main__viewer")) {
+    }
+    //outside viewer click
+    else if (target.classList.contains("l-main__viewer")) {
       let viewer = target.querySelector(".c-viewer").id;
       if (viewer == "text-viewer") {
         closeTextViewer();
       } else if (viewer == "image-viewer") {
         closeImageViewer();
       }
-    } else if (target.classList.contains("l-main__account")) {
+    }
+    //outside account click
+    else if (target.classList.contains("l-main__account")) {
       closeAccountDisplay();
-    } else if (
+    }
+    //add button click
+    else if (
       target.parentNode.id == "add-button" ||
       target.id == "add-button"
     ) {
       toggleMenu();
       activeEntryMenu = null;
       hideEntryDropdowns();
-    } else {
+    }
+    //remove preview click
+    else if (target.classList.contains("c-editor__remove")) {
+      console.log(target.parentNode);
+      removeSelectedImage(target.parentNode);
+    }
+    //else
+    else {
       activeEntryMenu = null;
       hideEntryDropdowns();
       hideMenu();
@@ -384,6 +413,7 @@ const DIARY_APP = (function () {
 
   function closeImageUploader() {
     let parentContainer = imageUploader.parentNode;
+    selectedFiles = [];
     imageUploader
       .querySelectorAll(".js-editor-editable")
       .forEach((editable) => {
@@ -391,6 +421,9 @@ const DIARY_APP = (function () {
       });
     parentContainer.classList.remove("l-main__editor--visible");
     imageUploader.classList.remove("c-entry-create--visible");
+    document.querySelectorAll(".js-image-preview").forEach((preview) => {
+      preview.remove();
+    });
     bodyScrollRevert();
   }
 
@@ -454,9 +487,9 @@ const DIARY_APP = (function () {
           }
         )}`;
 
-        itemEntry.content.forEach((url) => {
+        itemEntry.content.forEach((img) => {
           content += `<li class="c-viewer__gallery-item"><img
-          src="${url}"
+          src="${img.url}"
           alt="entry image"
           class="c-viewer__gallery-image"/></li>`;
         });
@@ -497,7 +530,7 @@ const DIARY_APP = (function () {
       selectedFiles.push(image);
 
       let previewWrapper = document.createElement("li");
-      previewWrapper.classList.add("c-editor__upload-item");
+      previewWrapper.classList.add("c-editor__upload-item", "js-image-preview");
       let template = `
       <button class="c-editor__remove">
       <span class="material-icons"> remove </span>
@@ -511,28 +544,85 @@ const DIARY_APP = (function () {
 
       imagePreviewer.appendChild(previewWrapper);
     });
-    console.log(images);
-    console.log("called");
-    console.log(selectedFiles);
+
+    if (selectedFiles) {
+      imageSubmitButton.disabled = false;
+    }
+  }
+
+  function removeSelectedImage(target) {
+    let index = Array.from(imagePreviewer.children).indexOf(target) - 1;
+    // console.log(
+    //   // Array.prototype.indexOf.call(imagePreviewer.childNodes, target)
+    //   Array.from(imagePreviewer.children).indexOf(target) - 1
+    // );
+    selectedFiles.splice(index, 1);
+
+    target.remove();
+
+    if (!selectedFiles.length) {
+      imageSubmitButton.disabled = true;
+    }
   }
 
   function submitEntry() {
     let editor = this.parentNode.parentNode;
     let formData = new FormData();
-    let headers = { "Content-Type": "application/json" };
+    let headers = null;
     let body = null;
     if (editor.id == "text-editor") {
       let jsonBody = {};
+      headers = { "Content-Type": "application/json" };
       // let result = {};
       formData.append("type", "text");
-      formData.append("title", textTitleInput.textContent);
+      formData.append(
+        "title",
+        textTitleInput.textContent.length
+          ? textTitleInput.textContent
+          : "Untitled"
+      );
       formData.append("content", textBodyInput.innerText);
       formData.forEach((value, key) => (jsonBody[key] = value));
       body = JSON.stringify(jsonBody);
 
-      fetchJson("/entries", "POST", "include", body, headers).then((result) => {
+      fetchJson("/entries", "POST", "include", body, headers)
+        .then((result) => {
+          console.log(result);
+          if (result.success) {
+            createEntry(result.entryId);
+            closeTextEditor();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      formData.append("type", "image");
+      formData.append(
+        "title",
+        albumTitleInput.textContent.length
+          ? albumTitleInput.textContent
+          : "Untitled"
+      );
+      headers = {
+        "Content-Type":
+          "multipart/form-data; boundary=—-WebKitFormBoundaryfgtsKTYLsT7PNUVD",
+      };
+
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+        console.log(file);
+      });
+
+      body = formData;
+
+      // console.log(body);
+
+      fetchJson("/entries/upload", "POST", "include", body).then((result) => {
+        console.log(result);
         if (result.success) {
           createEntry(result.entryId);
+          closeImageUploader();
         }
       });
     }
@@ -580,7 +670,6 @@ const DIARY_APP = (function () {
         mainList.prepend(newItem);
         gsapDatePins();
       }
-      closeTextEditor();
     });
   }
 
@@ -593,11 +682,17 @@ const DIARY_APP = (function () {
   ) {
     let response = null;
 
-    if (body) {
+    if (body && credentials && headers) {
+      console.log("fetch with all");
       response = await fetch(link, { method, body, credentials, headers });
+    } else if (body && credentials) {
+      console.log("fetch with b and c");
+      response = await fetch(link, { method, body, credentials });
     } else if (credentials) {
+      console.log("fetch with c");
       response = await fetch(link, { method, credentials });
     } else {
+      console.log("fetch with def");
       response = await fetch(link, { method });
     }
 
@@ -642,6 +737,7 @@ const DIARY_APP = (function () {
         pasteCatcher.bind(this)(event);
       });
     });
+    // imageUploader.addEventListener("transitionend", removePreviews);
     accountCloseButton.addEventListener("click", closeAccountDisplay);
     viewerCloseButtons.forEach((button) => {
       button.addEventListener("click", closeViewer);

@@ -28,9 +28,16 @@ const entry_add_text = (req, res) => {
   });
 };
 
+const entry_upload_images = (req, res) => {
+  entryDB.create_image(req.user.userId, req).then((data) => {
+    res.json(data);
+  });
+};
+
 module.exports = {
   entry_index,
   entry_all,
   entry_read_one,
   entry_add_text,
+  entry_upload_images,
 };

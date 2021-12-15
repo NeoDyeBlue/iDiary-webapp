@@ -1,11 +1,20 @@
 require("dotenv").config();
 const db = require("./database");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
+// const formidable = require("formidable");
+// const form = formidable({ multiples: true });
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 async function read_all(userId) {
   try {
     // let connection = db.getConnection();
-    let userQuery = `SELECT UserFirstName as 'firstName', UserLastName as 'lastName', UserEmail as 'email' FROM user WHERE UserID = '${userId}'`;
+    let userQuery = `SELECT UserFirstName as 'firstName', UserLastName as 'lastName', UserEmail as 'email', UserImage as 'image' FROM user WHERE UserID = '${userId}'`;
     let entryQuery = `SELECT entry.EntryID, entry.EntryDateTime, entry.EntryTitle, entry.ContentType, entry.EntryContent 
     FROM entry WHERE EntryUserID = '${userId}' ORDER BY entry.EntryDateTime DESC`;
 
@@ -17,6 +26,7 @@ async function read_all(userId) {
         firstName: user[0].firstName,
         lastName: user[0].lastName,
         email: user[0].email,
+        image: user[0].image,
       },
       entries: [],
     };
@@ -144,8 +154,84 @@ async function create_text(userId, body) {
   return final;
 }
 
+async function create_image(userId, req) {
+  let final = { success: false };
+  try {
+    let query = `INSERT INTO entry (EntryUserID, EntryDateTime, EntryTitle, ContentType, EntryContent) VALUES (?, NOW(), ?, ?, ?)`;
+    let uploadContent = null;
+    let inputFields = req.fields;
+    // let result = await upload_images(userId, req.files);
+
+    await upload_images(userId, req.files).then((result) => {
+      uploadContent = result;
+    });
+
+    await db
+      .execute(query, [
+        userId,
+        inputFields.title,
+        inputFields.type,
+        JSON.stringify(uploadContent),
+      ])
+      .then((result) => {
+        final.success = true;
+        final.entryId = result[0].insertId;
+      })
+      .catch((err) => {
+        console.log(err);
+        final.message = "an error occured";
+      });
+  } catch (err) {
+    console.log("err here");
+    console.log(err);
+    final.message = "an error occured";
+  }
+  return final;
+}
+
+async function upload_images(userId, files) {
+  let uploadResults = { content: [] };
+  let uploadPromises = [];
+
+  if (!Array.isArray(files.images)) {
+    files.images = [files.images];
+  }
+
+  try {
+    files.images.forEach((image) => {
+      uploadPromises.push(
+        cloudinary.uploader
+          .upload(image.path, {
+            folder: `idiary/entries/${userId}`,
+            quality: "auto:low",
+          })
+          .then((result) => {
+            console.log(result);
+            uploadResults.content.push({
+              id: result.public_id,
+              url: result.url,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      );
+    });
+    // let values = [userId, body.title, body.type, content];
+  } catch (err) {
+    console.log(err);
+  }
+
+  return await Promise.all(uploadPromises).then(() => {
+    console.log("done");
+    // console.log(uploadResults);
+    return uploadResults;
+  });
+}
+
 module.exports = {
   read_all,
   read_one,
   create_text,
+  create_image,
 };
