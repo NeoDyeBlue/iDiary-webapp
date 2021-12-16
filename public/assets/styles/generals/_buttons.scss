@@ -77,6 +77,10 @@
     // text-shadow: v.$short-shadow-neutral-600;
   }
 
+  &--text-neutral-500 {
+    color: v.$neutral-500;
+  }
+
   &--text-red {
     color: red;
     text-shadow: none;
@@ -145,6 +149,14 @@
 
   &--margin-bottom {
     margin-bottom: 1rem;
+  }
+
+  &--red {
+    background-color: v.$red;
+
+    &:hover {
+      background-color: rgb(194, 5, 5);
+    }
   }
 
   &--blue-primary-500 {

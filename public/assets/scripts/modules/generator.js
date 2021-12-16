@@ -15,8 +15,6 @@ const MONTHS_SHORT = [
 
 function generateEntries(data) {
   let dateWrap = "";
-  //   response = data;
-  console.log(data);
   data.entries.forEach((dates) => {
     let date = new Date(dates.date);
     dateWrap += `<li data-date='${dates.date}' class="c-entries__on-date">
@@ -66,23 +64,24 @@ function createDateEntries(data) {
         >
           <span class="material-icons"> more_vert </span>
         </button>
-        <ul class="c-entries__dropdown">
-          <li class="c-entries__menu-item js-entry-edit">
-            <span class="material-icons c-entries__menu-item-icon">edit</span>
-            <p class="c-text">Edit</p>
-          </li>
-          <li class="c-entries__menu-item js-entry-delete">
-            <span class="material-icons c-entries__menu-item-icon">delete</span>
-            <p class="c-text">Delete</p>
-          </li>
+        <ul class="c-entries__dropdown" data-id="${entry.entryId}" data-type="${
+        entry.type
+      }">
+      <li class="c-entries__menu-item js-entry-edit">
+          <span class="material-icons c-entries__menu-icon">edit</span>
+          <p class="c-entries__menu-text">Edit</p>
+        </li>
+        <li class="c-entries__menu-item js-entry-delete">
+          <span class="material-icons c-entries__menu-icon c-entries__menu-icon--red">delete</span>
+          <p class="c-entries__menu-text c-entries__menu-text--red">Delete</p>
+        </li>
         </ul>
       </div>
         <div class="c-entries__title-time">
-          <h2 data-id="${
-            entry.entryId
-          }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
-        entry.title
-      }</h2>
+          <h2 data-id="${entry.entryId}" data-type="${
+        entry.type
+      }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">
+          ${entry.title}</h2>
           <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
             ${new Date(entry.time).toLocaleTimeString("en-us", {
               hour: "numeric",
@@ -120,21 +119,23 @@ function createDateEntries(data) {
         >
           <span class="material-icons"> more_vert </span>
         </button>
-        <ul class="c-entries__dropdown">
+        <ul class="c-entries__dropdown" data-id="${entry.entryId}" data-type="${
+        entry.type
+      }">
           <li class="c-entries__menu-item js-entry-edit">
-            <span class="material-icons c-entries__menu-item-icon">edit</span>
-            <p class="c-text">Edit</p>
+            <span class="material-icons c-entries__menu-icon">edit</span>
+            <p class="c-entries__menu-text">Edit</p>
           </li>
           <li class="c-entries__menu-item js-entry-delete">
-            <span class="material-icons c-entries__menu-item-icon">delete</span>
-            <p class="c-text">Delete</p>
+            <span class="material-icons c-entries__menu-icon c-entries__menu-icon--red">delete</span>
+            <p class="c-entries__menu-text c-entries__menu-text--red">Delete</p>
           </li>
         </ul>
       </div>
         <div class="c-entries__title-time">
-          <h2 data-id="${
-            entry.entryId
-          }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
+          <h2 data-id="${entry.entryId}" data-type="${
+        entry.type
+      }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
         entry.title
       }</h2>
           <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
@@ -147,7 +148,7 @@ function createDateEntries(data) {
         </div>
         <div
           class="
-            c-entries__content-wrap c-entries__content-wrap--image
+            c-entries__content-wrap c-entries__content-wrap--image js-album-preview
           "
         >
           ${createContent("image", entry.content)}
@@ -169,17 +170,22 @@ function createContent(type, data) {
       snippet += " ...";
     }
     content += `
-      <p class="c-text c-text--neutral-300 c-entries__text">
+      <p class="c-text c-text--neutral-300 c-entries__text js-text-content">
       ${snippet}
       </p>`;
   } else if (type == "image") {
-    console.log(data);
     data.slice(0, 3).forEach((img) => {
       content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
         src="${img.url}"
         alt="entry image"
         class="c-entries__image"/></div>`;
     });
+    if (data.length > 3) {
+      let excess = data.length - 3;
+      content += `<div class="c-entries__image-wrap">
+      <p class="c-text c-text--neutral-300 c-text--large c-text--absolute">+${excess} more</p>
+      </div>`;
+    }
   }
   return content;
 }

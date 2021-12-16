@@ -13,20 +13,6 @@ const DIARY_APP = (function () {
 
   //#region
   //datetime vars
-  const MONTHS_SHORT = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
   const MONTHS_LONG = [
     "January",
     "February",
@@ -65,6 +51,8 @@ const DIARY_APP = (function () {
   var menuItems = document.querySelectorAll(".c-nav__button-item");
   var mainList = document.getElementById("main-list");
   //editor vars
+  var textEditorLabel = document.getElementById("text-editor-label");
+  var imageUploadeLabel = document.getElementById("image-uploader-label");
   var textTitleInput = document.getElementById("text-title-input");
   var textBodyInput = document.getElementById("text-body-input");
   var textEditor = document.getElementById("text-editor");
@@ -75,7 +63,14 @@ const DIARY_APP = (function () {
   var editorCloseButtons = document.querySelectorAll(".js-editor-close");
   var editorDoneButtons = document.querySelectorAll(".js-editor-done");
   var imageSubmitButton = document.getElementById("images-submit");
-  var selectedFiles = [];
+  var selectedImages = [];
+  var toRemoveFromCloud = [];
+  var editorOptions = {
+    label: "New Entry",
+    doneHandler: "new",
+    updateId: null,
+    toUpdate: null,
+  };
   //viewer vars
   var viewerCloseButtons = document.querySelectorAll(".js-viewer-close");
   var textViewer = document.getElementById("text-viewer");
@@ -89,68 +84,14 @@ const DIARY_APP = (function () {
   //account view
   var accountCloseButton = document.querySelector(".js-account-close");
   var accountImageChange = document.getElementById("profile-image");
-
-  // var sampleResponse = {
-  //   user: {
-  //     firstname: "John Paul",
-  //     lastname: "Zoleta",
-  //   },
-  //   entries: [
-  //     {
-  //       date: 1638550800,
-  //       dateEntries: [
-  //         {
-  //           title: "A New Start",
-  //           datetime: 1638640439,
-  //           type: "text",
-  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
-  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
-  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-  //         },
-  //         {
-  //           title: "Remember?",
-  //           datetime: 1638622706,
-  //           type: "image",
-  //           content: [
-  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_13_h9kqmc.png",
-  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638639204/sample-response-images/Screenshot_1_hhwyor.png",
-  //           ],
-  //         },
-  //         {
-  //           title: "Blast To The Past",
-  //           datetime: 1638640439,
-  //           type: "text",
-  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
-  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
-  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       date: "1638464400",
-  //       dateEntries: [
-  //         {
-  //           title: "A Tough Decision",
-  //           datetime: 1638640439,
-  //           type: "text",
-  //           content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veritatis, apiente accusamus incidunt quibusdam minus eaque
-  //           voluptatem assumenda praesentium. Nemo excepturi, corporis odio quaerat voluptatum iusto necessitatibus aut fuga eveniet quae
-  //           obcaecati illo expedita inventore voluptatem animi magnam saepe natus quis.`,
-  //         },
-  //         {
-  //           title: "A Relaxing Take",
-  //           datetime: 1638622706,
-  //           type: "image",
-  //           content: [
-  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_18.31.56_x3io2c.png",
-  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-12-20_23.50.04_o1djls.png",
-  //             "https://res.cloudinary.com/dppgyhery/image/upload/w_600,q_auto/v1638638191/sample-response-images/2019-10-21_14.27.13_vqpj0z.png",
-  //           ],
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // };
+  //modal
+  var deleteModal = document.getElementById("delete-modal");
+  var deleteButton = document.getElementById("delete-confirm");
+  var toDeleteEntry = {
+    id: null,
+    type: null,
+    element: null,
+  };
 
   var activeEntryMenu = null;
   var scrollPosition = null;
@@ -177,7 +118,6 @@ const DIARY_APP = (function () {
       mainList.innerHTML = generateEntries(data);
       addListeners();
       createGSAPAnims();
-      console.log(apiResponse);
     });
     fetchJson("https://quotes.rest/qod?language=en", "GET")
       .then((data) => {
@@ -185,7 +125,7 @@ const DIARY_APP = (function () {
 
         quoteText.innerText = data.contents.quotes[0].quote;
         quoteAuthor.innerText = data.contents.quotes[0].author;
-        // quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%), url("${data.contents.quotes[0].background}")`;
+        quoteContainer.style.backgroundImage = ` linear-gradient( 0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%), url("${data.contents.quotes[0].background}")`;
       })
       .catch((err) => {
         console.log(err);
@@ -271,6 +211,40 @@ const DIARY_APP = (function () {
       hideEntryDropdowns();
       showEntryDropdown(target);
     }
+    //entry edit click
+    else if (target.classList.contains("js-entry-edit")) {
+      activeEntryMenu = null;
+      hideMenu();
+      hideEntryDropdowns();
+      editorOptions.label = "Edit Entry";
+      editorOptions.doneHandler = "update";
+      editorOptions.toUpdate = target.parentNode.parentNode.parentNode;
+      // console.log(editorOptions.toUpdate);
+      if (target.parentNode.getAttribute("data-type") == "text") {
+        showTextEditor(target.parentNode.getAttribute("data-id"));
+      } else {
+        showImageUploader(target.parentNode.getAttribute("data-id"));
+      }
+    }
+    //entry delete click
+    else if (target.classList.contains("js-entry-delete")) {
+      activeEntryMenu = null;
+      hideMenu();
+      hideEntryDropdowns();
+      showDeleteModal();
+      toDeleteEntry.id = target.parentNode.getAttribute("data-id");
+      toDeleteEntry.type = target.parentNode.getAttribute("data-type");
+      toDeleteEntry.element = target.parentNode.parentNode.parentNode;
+      // editorOptions.toDelete = target.parentNode.parentNode.parentNode;
+      // deleteEntry(target.parentNode.getAttribute("data-id"));
+    }
+    //outside modal click
+    else if (
+      target.classList.contains("l-main__modal") ||
+      target.classList.contains("js-delete-cancel")
+    ) {
+      hideDeleteModal();
+    }
     //outside viewer click
     else if (target.classList.contains("l-main__viewer")) {
       let viewer = target.querySelector(".c-viewer").id;
@@ -289,9 +263,21 @@ const DIARY_APP = (function () {
       target.parentNode.id == "add-button" ||
       target.id == "add-button"
     ) {
+      editorOptions.label = "New Entry";
+      editorOptions.doneHandler = "new";
       toggleMenu();
       activeEntryMenu = null;
       hideEntryDropdowns();
+    } else if (target.id == "text-add-button") {
+      activeEntryMenu = null;
+      hideEntryDropdowns();
+      hideMenu();
+      showTextEditor();
+    } else if (target.id == "image-add-button") {
+      activeEntryMenu = null;
+      hideEntryDropdowns();
+      hideMenu();
+      showImageUploader();
     }
     //remove preview click
     else if (target.classList.contains("c-editor__remove")) {
@@ -371,6 +357,20 @@ const DIARY_APP = (function () {
     menuTl.reverse();
   }
 
+  function showDeleteModal() {
+    bodyScrollSet();
+    let parent = deleteModal.parentNode;
+    deleteModal.classList.add("c-modal--visible");
+    parent.classList.add("l-main__modal--visible");
+  }
+
+  function hideDeleteModal() {
+    bodyScrollRevert();
+    let parent = deleteModal.parentNode;
+    deleteModal.classList.remove("c-modal--visible");
+    parent.classList.remove("l-main__modal--visible");
+  }
+
   function showAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
     bodyScrollSet();
@@ -385,12 +385,25 @@ const DIARY_APP = (function () {
     bodyScrollRevert();
   }
 
-  function showTextEditor() {
+  function showTextEditor(itemId = null) {
+    textEditorLabel.innerText = editorOptions.label;
     let parentContainer = textEditor.parentNode;
     bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     textEditor.classList.add("c-entry-create--visible");
-    toggleMenu();
+    hideMenu();
+
+    if (itemId) {
+      editorOptions.updateId = itemId;
+      textEditor.classList.add("c-loader");
+      fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
+        console.log(data);
+        textEditor.classList.remove("c-loader");
+        let itemEntry = data.entries[0].dateEntries[0];
+        textTitleInput.innerText = itemEntry.title;
+        textBodyInput.innerText = itemEntry.content;
+      });
+    }
   }
 
   function closeTextEditor() {
@@ -403,17 +416,54 @@ const DIARY_APP = (function () {
     bodyScrollRevert();
   }
 
-  function showImageUploader() {
+  function showImageUploader(itemId = null) {
+    imageUploadeLabel.innerText = editorOptions.label;
     let parentContainer = imageUploader.parentNode;
     bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     imageUploader.classList.add("c-entry-create--visible");
-    toggleMenu();
+    hideMenu();
+
+    if (itemId) {
+      editorOptions.updateId = itemId;
+      console.log(true, itemId);
+      imageUploader.classList.add("c-loader");
+      fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
+        imageUploader.classList.remove("c-loader");
+        let itemEntry = data.entries[0].dateEntries[0];
+        albumTitleInput.innerText = itemEntry.title;
+
+        itemEntry.content.forEach((img) => {
+          let previewWrapper = document.createElement("li");
+          previewWrapper.classList.add(
+            "c-editor__upload-item",
+            "js-image-preview"
+          );
+          let template = `
+          <button class="c-editor__remove">
+          <span class="material-icons"> remove </span>
+          </button>
+          <img
+          src="${img.url}"
+          alt="test image"
+          class="c-editor__image-item"/>
+          `;
+          previewWrapper.innerHTML = template;
+          // cloudImageIds.push(img.id);
+          selectedImages.push(img);
+          imagePreviewer.appendChild(previewWrapper);
+        });
+      });
+
+      if (selectedImages) {
+        imageSubmitButton.disabled = false;
+      }
+    }
   }
 
   function closeImageUploader() {
     let parentContainer = imageUploader.parentNode;
-    selectedFiles = [];
+    selectedImages = [];
     imageUploader
       .querySelectorAll(".js-editor-editable")
       .forEach((editable) => {
@@ -447,10 +497,19 @@ const DIARY_APP = (function () {
   function viewEntry(item) {
     // let item = item;
     let itemId = item.getAttribute("data-id");
+    let itemType = item.getAttribute("data-type");
     let itemDatetime = null;
     let itemEntry = null;
 
     bodyScrollSet();
+
+    if (itemType == "text") {
+      textViewer.classList.add("c-loader");
+      showTextViewer();
+    } else {
+      imageViewer.classList.add("c-loader");
+      showImageViewer();
+    }
 
     fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
       itemEntry = data.entries[0].dateEntries[0];
@@ -469,9 +528,9 @@ const DIARY_APP = (function () {
           }
         )}`;
 
-        textViewer.parentNode.classList.add("l-main__viewer--visible");
-        textViewer.classList.add("c-viewer--visible");
+        textViewer.classList.remove("c-loader");
       } else {
+        imageViewer.classList.add("c-loader");
         let content = "";
         itemDatetime = new Date(itemEntry.time);
         entryImageTitle.innerText = itemEntry.title;
@@ -495,39 +554,39 @@ const DIARY_APP = (function () {
         });
 
         entryImageContent.innerHTML = content;
-
-        imageViewer.parentNode.classList.add("l-main__viewer--visible");
-        imageViewer.classList.add("c-viewer--visible");
+        imageViewer.classList.remove("c-loader");
       }
     });
+  }
 
-    // apiResponse.entries.forEach((date) => {
-    //   date.dateEntries.forEach((entry) => {
-    //     if (entry.entryId == itemId) {
-    //       itemEntry = entry;
-    //     }
-    //   });
-    // });
+  function showTextViewer() {
+    textViewer.parentNode.classList.add("l-main__viewer--visible");
+    textViewer.classList.add("c-viewer--visible");
+  }
 
-    // console.log(itemEntry);
+  function showImageViewer() {
+    imageViewer.parentNode.classList.add("l-main__viewer--visible");
+    imageViewer.classList.add("c-viewer--visible");
   }
 
   function closeTextViewer() {
     textViewer.parentNode.classList.remove("l-main__viewer--visible");
     textViewer.classList.remove("c-viewer--visible");
+    textViewer.classList.remove("c-loader");
     bodyScrollRevert();
   }
 
   function closeImageViewer() {
     imageViewer.parentNode.classList.remove("l-main__viewer--visible");
     imageViewer.classList.remove("c-viewer--visible");
+    imageViewer.classList.remove("c-loader");
     bodyScrollRevert();
   }
 
   function previewImages() {
     let images = this.files;
     Array.from(images).forEach((image) => {
-      selectedFiles.push(image);
+      selectedImages.push(image);
 
       let previewWrapper = document.createElement("li");
       previewWrapper.classList.add("c-editor__upload-item", "js-image-preview");
@@ -545,28 +604,37 @@ const DIARY_APP = (function () {
       imagePreviewer.appendChild(previewWrapper);
     });
 
-    if (selectedFiles) {
+    if (selectedImages) {
       imageSubmitButton.disabled = false;
     }
+
+    console.log(selectedImages);
   }
 
   function removeSelectedImage(target) {
     let index = Array.from(imagePreviewer.children).indexOf(target) - 1;
-    // console.log(
-    //   // Array.prototype.indexOf.call(imagePreviewer.childNodes, target)
-    //   Array.from(imagePreviewer.children).indexOf(target) - 1
-    // );
-    selectedFiles.splice(index, 1);
+    let removed = selectedImages.splice(index, 1);
+
+    if (typeof removed[0] === "object") {
+      toRemoveFromCloud.push(removed[0]);
+    }
 
     target.remove();
 
-    if (!selectedFiles.length) {
+    if (!selectedImages.length) {
       imageSubmitButton.disabled = true;
     }
   }
 
-  function submitEntry() {
-    let editor = this.parentNode.parentNode;
+  function editorDone() {
+    if (editorOptions.doneHandler == "new") {
+      submitEntry(this.parentNode.parentNode);
+    } else if (editorOptions.doneHandler == "update") {
+      updateEntry(this.parentNode.parentNode);
+    }
+  }
+
+  function submitEntry(editor) {
     let formData = new FormData();
     let headers = null;
     let body = null;
@@ -589,7 +657,7 @@ const DIARY_APP = (function () {
         .then((result) => {
           console.log(result);
           if (result.success) {
-            createEntry(result.entryId);
+            createEntryElement(result.entryId);
             closeTextEditor();
           }
         })
@@ -609,26 +677,27 @@ const DIARY_APP = (function () {
           "multipart/form-data; boundary=—-WebKitFormBoundaryfgtsKTYLsT7PNUVD",
       };
 
-      selectedFiles.forEach((file) => {
+      selectedImages.forEach((file) => {
         formData.append("images", file);
         console.log(file);
       });
 
       body = formData;
-
+      editor.parentNode.classList.add("c-loader");
       // console.log(body);
 
       fetchJson("/entries/upload", "POST", "include", body).then((result) => {
         console.log(result);
         if (result.success) {
-          createEntry(result.entryId);
+          createEntryElement(result.entryId);
+          editor.classList.remove("c-loader");
           closeImageUploader();
         }
       });
     }
   }
 
-  function createEntry(entryId) {
+  function createEntryElement(entryId) {
     fetchJson(`/entries/${entryId}`, "GET", "include").then((data) => {
       let firstListItem = mainList.querySelector(".c-entries__on-date");
       let newItem = null;
@@ -673,6 +742,151 @@ const DIARY_APP = (function () {
     });
   }
 
+  function updateEntry(editor) {
+    let formData = new FormData();
+    let headers = null;
+    let body = null;
+    if (editor.id == "text-editor") {
+      textEditor.parentNode.classList.add("c-loader");
+      let jsonBody = {};
+      headers = { "Content-Type": "application/json" };
+      // let result = {};
+      formData.append("type", "text");
+      formData.append(
+        "title",
+        textTitleInput.textContent.length
+          ? textTitleInput.textContent
+          : "Untitled"
+      );
+      formData.append("content", textBodyInput.innerText);
+      formData.forEach((value, key) => (jsonBody[key] = value));
+      body = JSON.stringify(jsonBody);
+
+      fetchJson(
+        `/entries/${editorOptions.updateId}`,
+        "POST",
+        "include",
+        body,
+        headers
+      )
+        .then((result) => {
+          console.log(result);
+          if (result.success) {
+            updateEntryElement(result.updatedItemId, editorOptions.toUpdate);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (editor.id == "image-uploader") {
+      imageUploader.parentNode.classList.add("c-loader");
+      let retained = [];
+      formData.append("type", "image");
+      formData.append(
+        "title",
+        albumTitleInput.textContent.length
+          ? albumTitleInput.textContent
+          : "Untitled"
+      );
+      headers = {
+        "Content-Type":
+          "multipart/form-data; boundary=—-WebKitFormBoundaryfgtsKTYLsT7PNUVD",
+      };
+
+      selectedImages.forEach((selection) => {
+        // console.log(selection);
+        if (selection instanceof File) {
+          console.log("imafile");
+          formData.append("images", selection);
+        } else {
+          retained.push(selection);
+        }
+      });
+      formData.append("toRetain", JSON.stringify({ content: retained }));
+      formData.append(
+        "toRemove",
+        JSON.stringify({ content: toRemoveFromCloud })
+      );
+
+      body = formData;
+
+      fetchJson(
+        `/entries/${editorOptions.updateId}`,
+        "POST",
+        "include",
+        body
+      ).then((result) => {
+        console.log(result);
+        if (result.success) {
+          // createEntryElement(result.entryId);
+          updateEntryElement(result.updatedItemId, editorOptions.toUpdate);
+        }
+      });
+    }
+  }
+
+  function updateEntryElement(id, element) {
+    fetchJson(`/entries/${id}`, "GET", "include").then((data) => {
+      console.log(data);
+      let itemEntry = data.entries[0].dateEntries[0];
+
+      if (itemEntry.type == "text") {
+        let snippet = itemEntry.content;
+        if (snippet.length > 150) {
+          snippet = itemEntry.content.substring(
+            0,
+            itemEntry.content.indexOf(" ", 150)
+          );
+          snippet += " ...";
+        }
+        element.querySelector(".js-entry-click").innerText = itemEntry.title;
+        element.querySelector(".js-text-content").innerText = snippet;
+        textEditor.parentNode.classList.remove("c-loader");
+        closeTextEditor();
+      } else if (itemEntry.type == "image") {
+        element.querySelector(".js-entry-click").innerText = itemEntry.title;
+        let content = "";
+        let imageContentWrap = document.querySelector(".js-album-preview");
+        itemEntry.content.slice(0, 3).forEach((img) => {
+          content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+            src="${img.url}"
+            alt="entry image"
+            class="c-entries__image"/></div>`;
+        });
+        if (itemEntry.content.length > 3) {
+          let excess = itemEntry.content.length - 3;
+          content += `<div class="c-entries__image-wrap">
+          <p class="c-text c-text--neutral-300 c-text--large c-text--absolute">+${excess} more</p>
+          </div>`;
+        }
+
+        imageContentWrap.innerHTML = content;
+
+        imageUploader.parentNode.classList.remove("c-loader");
+        closeImageUploader();
+      }
+    });
+  }
+
+  function deleteEntry() {
+    deleteModal.parentNode.classList.add("c-loader");
+    fetchJson(`entries/${toDeleteEntry.id}`, "DELETE", "include").then(
+      (result) => {
+        if (result.success) {
+          let parentList = toDeleteEntry.element.parentNode;
+          toDeleteEntry.element.remove();
+
+          if (!parentList.querySelectorAll("c-entries__item").length) {
+            parentList.remove();
+          }
+        }
+
+        deleteModal.parentNode.classList.remove("c-loader");
+        hideDeleteModal();
+      }
+    );
+  }
+
   async function fetchJson(
     link,
     method,
@@ -683,16 +897,12 @@ const DIARY_APP = (function () {
     let response = null;
 
     if (body && credentials && headers) {
-      console.log("fetch with all");
       response = await fetch(link, { method, body, credentials, headers });
     } else if (body && credentials) {
-      console.log("fetch with b and c");
       response = await fetch(link, { method, body, credentials });
     } else if (credentials) {
-      console.log("fetch with c");
       response = await fetch(link, { method, credentials });
     } else {
-      console.log("fetch with def");
       response = await fetch(link, { method });
     }
 
@@ -729,7 +939,7 @@ const DIARY_APP = (function () {
       button.addEventListener("click", closeEditor);
     });
     editorDoneButtons.forEach((button) => {
-      button.addEventListener("click", submitEntry);
+      button.addEventListener("click", editorDone);
     });
     imageInput.addEventListener("change", previewImages);
     contentEditables.forEach((editable) => {
@@ -743,7 +953,8 @@ const DIARY_APP = (function () {
       button.addEventListener("click", closeViewer);
     });
     accountButton.addEventListener("click", showAccountDisplay);
-    imageAddButton.addEventListener("click", showImageUploader);
-    textAddButton.addEventListener("click", showTextEditor);
+    deleteButton.addEventListener("click", deleteEntry);
+    // imageAddButton.addEventListener("click", showImageUploader);
+    // textAddButton.addEventListener("click", showTextEditor);
   }
 })();

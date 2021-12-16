@@ -162,6 +162,9 @@ img {
 .c-button--text-black {
   color: #262b2c;
 }
+.c-button--text-neutral-500 {
+  color: #718084;
+}
 .c-button--text-red {
   color: red;
   text-shadow: none;
@@ -210,6 +213,12 @@ img {
 }
 .c-button--margin-bottom {
   margin-bottom: 1rem;
+}
+.c-button--red {
+  background-color: #fd0b1d;
+}
+.c-button--red:hover {
+  background-color: #c20505;
 }
 .c-button--blue-primary-500 {
   background-color: #11b5e4;
@@ -399,6 +408,9 @@ img {
 .c-text--margin-top {
   margin-top: 0.5rem;
 }
+.c-text--700 {
+  font-weight: 700;
+}
 .c-text--fluid-large {
   font-size: clamp(2rem, 5vw, 3.5rem);
 }
@@ -484,6 +496,15 @@ img {
 }
 .c-text--red {
   color: #fd0b1d;
+}
+.c-text--unclickable {
+  pointer-events: none;
+}
+.c-text--absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .l-home {

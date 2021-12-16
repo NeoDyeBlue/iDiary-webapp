@@ -14,17 +14,23 @@ router.get("/all", user_auth, (req, res) => {
 });
 
 router.get("/:entry", user_auth, (req, res) => {
-  console.log("called");
   entryController.entry_read_one(req, res);
 });
 
 router.post("/", user_auth, (req, res) => {
-  console.log("post text");
   entryController.entry_add_text(req, res);
 });
 
 router.post("/upload", user_auth, (req, res) => {
   entryController.entry_upload_images(req, res);
+});
+
+router.post("/:entry", user_auth, (req, res) => {
+  entryController.entry_update(req, res);
+});
+
+router.delete("/:entry", user_auth, (req, res) => {
+  entryController.entry_delete(req, res);
 });
 
 function user_auth(req, res, next) {

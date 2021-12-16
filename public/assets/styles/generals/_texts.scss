@@ -145,6 +145,10 @@
     margin-top: 0.5rem;
   }
 
+  &--700 {
+    font-weight: 700;
+  }
+
   &--fluid-large {
     font-size: clamp(2rem, 5vw, 3.5rem);
   }
@@ -258,5 +262,16 @@
 
   &--red {
     color: v.$error-red;
+  }
+
+  &--unclickable {
+    pointer-events: none;
+  }
+
+  &--absolute {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
