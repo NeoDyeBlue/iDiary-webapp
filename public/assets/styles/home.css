@@ -303,6 +303,9 @@ img {
 .c-header--small {
   font-size: 0.813rem;
 }
+.c-header--medium {
+  font-size: 1rem;
+}
 .c-header--large {
   font-size: 1.125rem;
 }
@@ -441,7 +444,7 @@ img {
 .c-text--bold {
   font-weight: 700;
 }
-.c-text--text-center {
+.c-text--center {
   text-align: center;
 }
 .c-text--centered-content {

@@ -92,6 +92,15 @@ const DIARY_APP = (function () {
     type: null,
     element: null,
   };
+  //account accountForms
+  var accountForms = document.querySelectorAll(".c-form");
+  var accountFirstNameInput = document.getElementById("first-name");
+  var accountLastNameInput = document.getElementById("last-name");
+  var accountEmailInput = document.getElementById("email");
+  var accountEmailErr = document.getElementById("email-error");
+  var accountPasswordInput = document.getElementById("password");
+  var accountPasswordConfirmInput = document.getElementById("password-confirm");
+  var accountPasswordErr = document.getElementById("password-error");
 
   var activeEntryMenu = null;
   var scrollPosition = null;
@@ -111,6 +120,9 @@ const DIARY_APP = (function () {
       acctProfileThumb.src = data.user.image;
       accountImageChange.src = data.user.image;
       acctFirstNameEl.innerText = data.user.firstName;
+      accountFirstNameInput.value = data.user.firstName;
+      accountLastNameInput.value = data.user.lastName;
+      accountEmailInput.value = data.user.email;
       acctLastNameEl.innerText = data.user.lastName;
       initializeClock();
       setInterval(updateClock, 1000);
@@ -268,12 +280,16 @@ const DIARY_APP = (function () {
       toggleMenu();
       activeEntryMenu = null;
       hideEntryDropdowns();
-    } else if (target.id == "text-add-button") {
+    }
+    //text add
+    else if (target.id == "text-add-button") {
       activeEntryMenu = null;
       hideEntryDropdowns();
       hideMenu();
       showTextEditor();
-    } else if (target.id == "image-add-button") {
+    }
+    //image add
+    else if (target.id == "image-add-button") {
       activeEntryMenu = null;
       hideEntryDropdowns();
       hideMenu();
@@ -281,7 +297,6 @@ const DIARY_APP = (function () {
     }
     //remove preview click
     else if (target.classList.contains("c-editor__remove")) {
-      console.log(target.parentNode);
       removeSelectedImage(target.parentNode);
     }
     //else
@@ -397,7 +412,6 @@ const DIARY_APP = (function () {
       editorOptions.updateId = itemId;
       textEditor.classList.add("c-loader");
       fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
-        console.log(data);
         textEditor.classList.remove("c-loader");
         let itemEntry = data.entries[0].dateEntries[0];
         textTitleInput.innerText = itemEntry.title;
@@ -425,8 +439,8 @@ const DIARY_APP = (function () {
     hideMenu();
 
     if (itemId) {
+      console.log("called");
       editorOptions.updateId = itemId;
-      console.log(true, itemId);
       imageUploader.classList.add("c-loader");
       fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
         imageUploader.classList.remove("c-loader");
@@ -652,11 +666,11 @@ const DIARY_APP = (function () {
       formData.append("content", textBodyInput.innerText);
       formData.forEach((value, key) => (jsonBody[key] = value));
       body = JSON.stringify(jsonBody);
-
+      editor.parentNode.classList.add("c-loader");
       fetchJson("/entries", "POST", "include", body, headers)
         .then((result) => {
-          console.log(result);
           if (result.success) {
+            editor.parenNode.classList.remove("c-loader");
             createEntryElement(result.entryId);
             closeTextEditor();
           }
@@ -665,6 +679,7 @@ const DIARY_APP = (function () {
           console.log(err);
         });
     } else {
+      console.log(editor);
       formData.append("type", "image");
       formData.append(
         "title",
@@ -679,7 +694,6 @@ const DIARY_APP = (function () {
 
       selectedImages.forEach((file) => {
         formData.append("images", file);
-        console.log(file);
       });
 
       body = formData;
@@ -690,7 +704,7 @@ const DIARY_APP = (function () {
         console.log(result);
         if (result.success) {
           createEntryElement(result.entryId);
-          editor.classList.remove("c-loader");
+          editor.parentNode.classList.remove("c-loader");
           closeImageUploader();
         }
       });
@@ -818,6 +832,7 @@ const DIARY_APP = (function () {
       ).then((result) => {
         console.log(result);
         if (result.success) {
+          console.log(editorOptions.toUpdate);
           // createEntryElement(result.entryId);
           updateEntryElement(result.updatedItemId, editorOptions.toUpdate);
         }
@@ -846,7 +861,7 @@ const DIARY_APP = (function () {
       } else if (itemEntry.type == "image") {
         element.querySelector(".js-entry-click").innerText = itemEntry.title;
         let content = "";
-        let imageContentWrap = document.querySelector(".js-album-preview");
+        let imageContentWrap = element.querySelector(".js-album-preview");
         itemEntry.content.slice(0, 3).forEach((img) => {
           content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
             src="${img.url}"
@@ -876,8 +891,8 @@ const DIARY_APP = (function () {
           let parentList = toDeleteEntry.element.parentNode;
           toDeleteEntry.element.remove();
 
-          if (!parentList.querySelectorAll("c-entries__item").length) {
-            parentList.remove();
+          if (parentList.children.length == 0) {
+            parentList.parentNode.remove();
           }
         }
 
@@ -885,6 +900,71 @@ const DIARY_APP = (function () {
         hideDeleteModal();
       }
     );
+  }
+
+  function accountFormSubmit(event) {
+    event.preventDefault();
+
+    let formName = this.id;
+    console.log(this.id);
+
+    let formData = new FormData(this);
+    let method = "POST";
+    let headers = { "Content-Type": "application/json" };
+
+    let jsonBody = {};
+    formData.forEach((value, key) => {
+      if (key !== "password-re-enter") {
+        jsonBody[key] = value;
+      }
+    });
+    let body = JSON.stringify(jsonBody);
+
+    console.log(body);
+
+    if (formName == "name-form") {
+      fetchJson("/users/name", method, "include", body, headers)
+        .then((result) => {
+          if (result.success) {
+            accountFirstNameInput.value = jsonBody.firstName;
+            accountLastNameInput.value = jsonBody.lastName;
+            welcomeNameEl.innerText = jsonBody.firstName;
+            acctFirstNameEl.innerText = jsonBody.firstName;
+            acctLastNameEl.innerText = jsonBody.lastName;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (formName == "email-form") {
+      accountEmailErr.classList.remove("c-form__error--visible");
+      accountEmailInput.classList.remove("c-form__input--border-red");
+      fetchJson("/users/email", method, "include", body, headers).then(
+        (result) => {
+          if (result.success) {
+            accountEmailInput.value = jsonBody.email;
+          } else {
+            accountEmailInput.classList.add("c-form__input--border-red");
+            accountEmailErr.classList.add("c-form__error--visible");
+          }
+        }
+      );
+    } else if (formName == "password-form") {
+      accountPasswordInput.classList.remove("c-form__input--border-red-normal");
+      accountPasswordConfirmInput.classList.remove("c-form__input--border-red");
+      accountPasswordErr.classList.remove("c-form__error--visible");
+      if (accountPasswordInput.value == accountPasswordConfirmInput.value) {
+        fetchJson("/users/password", method, "include", jsonBody, headers)
+          .then((result) => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        accountPasswordInput.classList.add("c-form__input--border-red-normal");
+        accountPasswordConfirmInput.classList.add("c-form__input--border-red");
+        accountPasswordErr.classList.add("c-form__error--visible");
+      }
+    }
   }
 
   async function fetchJson(
@@ -922,16 +1002,11 @@ const DIARY_APP = (function () {
   }
 
   function addListeners() {
-    // document.querySelectorAll(".c-entries__item").forEach((item) => {
-    //   item.addEventListener("click", viewEntry);
-    // });
-    // document.querySelectorAll(".js-entry-menu").forEach((menu) => {
-    //   menu.addEventListener("click", function (event) {
-    //     event.stopPropagation();
-    //     showEntryDropdown.bind(this)(event);
-    //   });
-    // });
-    // addButton.addEventListener("click", toggleMenu);
+    accountForms.forEach((form) => {
+      form.addEventListener("submit", function (event) {
+        accountFormSubmit.bind(this)(event);
+      });
+    });
     document.addEventListener("click", function (event) {
       checkTarget(event);
     });

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
+// const path = require("path");
 const entryController = require("../controllers/entry-controller");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -35,7 +35,7 @@ router.delete("/:entry", user_auth, (req, res) => {
 
 function user_auth(req, res, next) {
   jwt.verify(req.cookies.token, process.env.JWT_AT_SECRET, (err, user) => {
-    if (err) return res.redirect("/login");
+    if (err) return res.redirect("/users/login");
     req.user = user;
     next();
   });

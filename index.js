@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 // const bcrypt = require("bcrypt");
 const homeRoutes = require("./routes/home-routes");
-const loginRoutes = require("./routes/login-routes");
+const userRoutes = require("./routes/user-routes");
 const signupRoutes = require("./routes/signup-routes");
 const entryRoutes = require("./routes/entry-routes");
 const app = express();
@@ -22,8 +22,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.use(homeRoutes);
-app.use("/login", [bodyParser.json()], loginRoutes);
-app.use("/signup", [bodyParser.json()], signupRoutes);
+app.use("/users", [formidable({ multiples: true })], userRoutes);
+// app.use("/login", [bodyParser.json()], loginRoutes);
+// app.use("/signup", [bodyParser.json()], signupRoutes);
 app.use("/entries", [formidable({ multiples: true })], entryRoutes);
 
 app.listen(port);

@@ -219,6 +219,13 @@ img {
   border: 2px solid #fd0b1d;
   background-color: white;
 }
+.c-form__input--border-red-normal {
+  border: 2px solid #fd0b1d;
+}
+.c-form__input--border-red-normal:focus {
+  border: 2px solid #fd0b1d;
+  background-color: white;
+}
 
 .c-button {
   display: flex;
@@ -415,6 +422,9 @@ img {
 .c-header--small {
   font-size: 0.813rem;
 }
+.c-header--medium {
+  font-size: 1rem;
+}
 .c-header--large {
   font-size: 1.125rem;
 }
@@ -553,7 +563,7 @@ img {
 .c-text--bold {
   font-weight: 700;
 }
-.c-text--text-center {
+.c-text--center {
   text-align: center;
 }
 .c-text--centered-content {
@@ -663,6 +673,7 @@ img {
   }
 }
 .l-main__entries {
+  position: relative;
   grid-column: 1/-1;
   z-index: 1;
 }
@@ -936,6 +947,30 @@ img {
   padding: clamp(1rem, 8vw, 1.3rem);
   border-radius: 10px;
   box-shadow: 0 1px 1px rgba(161, 172, 175, 0.11), 0 2px 2px rgba(161, 172, 175, 0.11), 0 4px 4px rgba(161, 172, 175, 0.11), 0 6px 8px rgba(161, 172, 175, 0.11), 0 8px 16px rgba(161, 172, 175, 0.11);
+}
+
+.c-empty {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  padding: clamp(1rem, 8vw, 1.3rem);
+}
+.c-empty--visible {
+  visibility: visible;
+}
+@media screen and (min-width: 768px) {
+  .c-empty {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .c-entries {
@@ -1338,30 +1373,17 @@ img {
   }
 }
 .c-viewer__gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  height: 100%;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 .c-viewer__gallery-item {
   position: relative;
   width: 100%;
   height: 100%;
 }
-.c-viewer__gallery-item::before {
-  content: "";
-  display: block;
-  padding-top: 100%;
-}
 .c-viewer__gallery-image {
-  -o-object-fit: cover;
-     object-fit: cover;
-  position: absolute;
-  height: 100%;
   width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: auto;
 }
 
 .c-editor {

@@ -54,8 +54,11 @@
   }
 
   &__entries {
+    position: relative;
     grid-column: 1 / -1;
     z-index: 1;
+    // width: 100%;
+    // height: 100%;
     @media screen and (min-width: v.$laptop) {
       // overflow: scroll;
       grid-column: 4 / 11;
@@ -384,6 +387,36 @@
   //   // box-shadow: none;
   // }
   // display: none;
+}
+
+.c-empty {
+  // position: absolute;
+  // top: 50%;
+  // left: 50%;
+  width: 100%;
+  // transform: translate(-50%, -50%);
+  max-width: 400px;
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  // margin: 0 v.$fluid-pad-mar;
+  padding: v.$fluid-pad-mar;
+  // border-bottom: 2px solid v.$blue-primary-500;
+
+  &--visible {
+    visibility: visible;
+  }
+
+  @media screen and (min-width: v.$laptop) {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .c-entries {
@@ -878,36 +911,46 @@
   }
 
   &__gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    // grid-auto-rows: 1fr;
-    height: 100%;
-    gap: 1rem;
+    // display: grid;
+    // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    // // grid-auto-rows: 1fr;
+    // height: 100%;
+    // gap: 1rem;
+    // height: 100%;
+    display: flex;
+    flex-direction: column;
+    // line-height: 0;
+    // column-count: 3;
+    // column-gap: 0;
   }
 
   &__gallery-item {
     position: relative;
     width: 100%;
     height: 100%;
+    // padding: 0.25rem;
 
-    &::before {
-      content: "";
-      display: block;
-      padding-top: 100%;
-    }
+    // &::before {
+    //   content: "";
+    //   display: block;
+    //   padding-top: 100%;
+    // }
     // aspect-ratio: 1;
   }
 
   &__gallery-image {
     // width: 100%;
     // height: 100%;
-    object-fit: cover;
-    position: absolute;
-    height: 100%;
+    // object-fit: cover;
+    // position: absolute;
+    // height: auto;
+    // width: 100%;
     width: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // max-width: 400px;
+    height: auto;
+    // top: 50%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
   }
 }
 

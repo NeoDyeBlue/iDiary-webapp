@@ -135,7 +135,6 @@ async function create_text(userId, body) {
   let final = { success: false };
   try {
     let content = JSON.stringify({ content: body.content });
-    console.log(content);
     let query = `INSERT INTO entry (EntryUserID, EntryDateTime, EntryTitle, ContentType, EntryContent) VALUES (?, NOW(), ?, ?, ?)`;
     let values = [userId, body.title, body.type, content];
 
@@ -257,16 +256,45 @@ async function update(userId, req) {
 }
 
 async function delete_entry(userId, req) {
-  let typeContentQuery = `SELECT ContentType, EntryContent FROM entry WHERE EntryID = ${req.params.entry} AND EntryUserID = ${userId}`;
-  let typeContent = { type: null, content: null };
+  let final = { success: false };
+  try {
+    let typeContentQuery = `SELECT ContentType, EntryContent FROM entry WHERE EntryID = ${req.params.entry} AND EntryUserID = ${userId}`;
+    let deleteQuery = `DELETE FROM entry WHERE EntryID = ${req.params.entry} AND EntryUserID = ${userId}`;
+    let typeContent = { type: null, content: null };
 
-  await db.execute(typeContentQuery).then((result) => {
-    let [data] = result;
-    typeContent.type = data[0].ContentType;
-    typeContent.content = data[0].EntryContent;
-  });
+    await db.execute(typeContentQuery).then((result) => {
+      let [data] = result;
+      typeContent.type = data[0].ContentType;
+      typeContent.content = data[0].EntryContent;
+    });
 
-  if (typeContent) console.log(typeContent);
+    if (typeContent.type == "image") {
+      let public_ids = [];
+      JSON.parse(typeContent.content).content.forEach((img) => {
+        public_ids.push(img.id);
+      });
+
+      await cloudinary.api
+        .delete_resources([public_ids])
+        .then((result) => {
+          final.cloudinary_result = result;
+        })
+        .catch((error) => console.log(error));
+    }
+
+    await db
+      .execute(deleteQuery)
+      .then((result) => {
+        final.success = true;
+        final.message = "deleted successfully";
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+  return final;
 }
 
 async function upload_images(userId, files) {

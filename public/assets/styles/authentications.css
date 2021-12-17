@@ -108,6 +108,58 @@ img {
   pointer-events: none;
 }
 
+@-webkit-keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.c-loader {
+  pointer-events: none;
+}
+.c-loader::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: rgba(249, 250, 250, 0.5);
+  z-index: 5;
+}
+.c-loader::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10%;
+  padding-bottom: 10%;
+  background-color: transparent;
+  border-top: 3px solid #0aec4f;
+  border-bottom: 3px solid #11b5e4;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-radius: 50%;
+  -webkit-animation: spin 3000ms linear infinite;
+          animation: spin 3000ms linear infinite;
+  transform-origin: center center;
+  z-index: 5;
+}
+
 .c-form {
   display: flex;
   flex-direction: column;
@@ -164,6 +216,13 @@ img {
   border: 2px solid #fd0b1d;
 }
 .c-form__input--border-red:focus {
+  border: 2px solid #fd0b1d;
+  background-color: white;
+}
+.c-form__input--border-red-normal {
+  border: 2px solid #fd0b1d;
+}
+.c-form__input--border-red-normal:focus {
   border: 2px solid #fd0b1d;
   background-color: white;
 }
@@ -363,6 +422,9 @@ img {
 .c-header--small {
   font-size: 0.813rem;
 }
+.c-header--medium {
+  font-size: 1rem;
+}
 .c-header--large {
   font-size: 1.125rem;
 }
@@ -501,7 +563,7 @@ img {
 .c-text--bold {
   font-weight: 700;
 }
-.c-text--text-center {
+.c-text--center {
   text-align: center;
 }
 .c-text--centered-content {

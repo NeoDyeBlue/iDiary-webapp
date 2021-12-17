@@ -72,5 +72,14 @@
         background-color: white;
       }
     }
+
+    &--border-red-normal {
+      border: 2px solid v.$error-red;
+
+      &:focus {
+        border: 2px solid v.$error-red;
+        background-color: white;
+      }
+    }
   }
 }

@@ -178,6 +178,7 @@ function createContent(type, data) {
       content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
         src="${img.url}"
         alt="entry image"
+        loading="lazy"
         class="c-entries__image"/></div>`;
     });
     if (data.length > 3) {

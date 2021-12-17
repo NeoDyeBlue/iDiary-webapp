@@ -9,6 +9,10 @@
     font-size: v.$small;
   }
 
+  &--medium {
+    font-size: v.$medium;
+  }
+
   &--large {
     font-size: v.$large;
   }
@@ -189,7 +193,7 @@
     font-weight: 700;
   }
 
-  &--text-center {
+  &--center {
     text-align: center;
   }
 

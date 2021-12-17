@@ -13,7 +13,7 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Filled|"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css" />
-    <link rel="stylesheet" href="assets/styles/authentications.css" />
+    <link rel="stylesheet" href="/assets/styles/authentications.css" />
     <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
     <title>iDiary | Login</title>
   </head>
@@ -115,7 +115,7 @@
             </p>
           </div>
           <div class="c-authenticate__container">
-            <form id="login-form" action="/login" method="POST" class="c-form">
+            <form id="login-form" method="POST" class="c-form">
               <div class="c-form__innerwrap">
                 <input
                   type="email"
@@ -156,7 +156,7 @@
               </div>
             </form>
           </div>
-          <div
+          <!-- <div
             class="
               c-authenticate__container
               c-authenticate__container--centered-content
@@ -170,7 +170,6 @@
               c-authenticate__container--centered-content
             "
           >
-            <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
             <div class="c-gplus-sign-in" data-onsuccess="onSignIn">
               <img
                 class="c-gplus-sign-in__icon"
@@ -179,16 +178,16 @@
               />
               <p class="c-gplus-sign-in__text">Sign-in with Google</p>
             </div>
-          </div>
+          </div> -->
           <div class="c-authenticate__container">
             <p class="c-text">
               Don't have an account?
-              <a href="signup" class="c-text__link">Sign Up</a>
+              <a href="/users/signup" class="c-text__link">Sign Up</a>
             </p>
           </div>
         </div>
       </div>
     </div>
-    <script src="assets/scripts/login.js"></script>
+    <script src="/assets/scripts/login.js"></script>
   </body>
 </html>
