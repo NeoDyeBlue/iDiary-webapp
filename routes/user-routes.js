@@ -27,24 +27,24 @@ router.get("/logout", (req, res) => {
   userController.logout_user(req, res);
 });
 
-router.post("/photo", (req, res) => {
+router.post("/photo", updates_auth, (req, res) => {
   console.log("post/photo");
   userController.update_photo(req, res);
 });
 
-router.post("/name", (req, res) => {
+router.post("/name", updates_auth, (req, res) => {
   console.log("post/name");
   userController.update_name(req, res);
 });
 
-router.post("/email", (req, res) => {
+router.post("/email", updates_auth, (req, res) => {
   console.log("post/email");
   userController.update_email(req, res);
 });
 
-router.post("/password", (req, res) => {
+router.post("/password", updates_auth, (req, res) => {
   console.log("post/pass");
-  userController.update_photo(req, res);
+  userController.update_password(req, res);
 });
 
 function user_auth(req, res, next) {
@@ -59,10 +59,8 @@ function user_auth(req, res, next) {
 
 function updates_auth(req, res, next) {
   jwt.verify(req.cookies.token, process.env.JWT_AT_SECRET, (err, user) => {
-    if (!err) {
-      req.user = user;
-      return res.redirect("/entries");
-    }
+    if (err) return res.redirect("/users/login");
+    req.user = user;
     next();
   });
 }

@@ -108,7 +108,6 @@ async function updatePhoto(userId, req) {}
 
 async function updateName(userId, body) {
   let final = { success: false };
-  console.log("call");
   try {
     let query =
       "UPDATE user SET UserFirstName = ?, UserLastName = ? WHERE UserID = ?";

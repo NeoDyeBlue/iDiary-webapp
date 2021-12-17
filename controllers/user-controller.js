@@ -39,7 +39,6 @@ const update_photo = (req, res) => {
 };
 
 const update_name = (req, res) => {
-  console.log(req);
   userDB.updateName(req.user.userId, req.fields).then((result) => {
     res.json(result);
   });

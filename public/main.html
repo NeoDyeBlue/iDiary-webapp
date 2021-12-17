@@ -421,7 +421,8 @@
             <div class="c-account__form-wrap">
               <form method="POST" class="c-form" id="name-form">
                 <div class="c-form__innerwrap">
-                  <h3 class="c-header c-header--neutral-500">Name</h3>
+                  <h3 class="c-header c-header--neutral-100">Name</h3>
+                  <div class="c-form__indicator"><span class="material-icons c-form__submit-success">done</span></div>
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--row">
                   <input
@@ -446,14 +447,15 @@
                   />
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--align-start">
-                  <button type="submit" class="c-button">Change Name</button>
+                  <button id="name-submit" disabled type="submit" class="c-button js-acct-update">Change Name</button>
                 </div>
               </form>
             </div>
-            <div class="c-account__form-wrap" id="email-form">
-              <form action="#" method="POST" class="c-form">
+            <div class="c-account__form-wrap">
+              <form action="#" method="POST" class="c-form" id="email-form">
                 <div class="c-form__innerwrap">
-                  <h3 class="c-header c-header--neutral-500">Email</h3>
+                  <h3 class="c-header c-header--neutral-100">Email</h3>
+                  <div class="c-form__indicator"><span class="material-icons c-form__submit-success">done</span></div>
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--row">
                   <input
@@ -472,14 +474,15 @@
                   </p>
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--align-start">
-                  <button type="submit" class="c-button">Change Email</button>
+                  <button id="email-submit" disabled type="submit" class="c-button js-acct-update">Change Email</button>
                 </div>
               </form>
             </div>
             <div class="c-account__form-wrap">
               <form method="POST" class="c-form" id="password-form">
                 <div class="c-form__innerwrap">
-                  <h3 class="c-header c-header--neutral-500">Password</h3>
+                  <h3 class="c-header c-header--neutral-100">Password</h3>
+                  <div class="c-form__indicator"><span class="material-icons c-form__submit-success">done</span></div>
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--row">
                   <input
@@ -509,7 +512,7 @@
                   </p>
                 </div>
                 <div class="c-form__innerwrap c-form__innerwrap--align-start">
-                  <button type="submit" class="c-button">
+                  <button id="password-submit" disabled type="submit" class="c-button js-acct-update">
                     Change Password
                   </button>
                 </div>

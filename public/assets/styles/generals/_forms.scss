@@ -23,6 +23,22 @@
     }
   }
 
+  &__indicator {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    // border: 1px solid black;
+    margin-left: 1rem;
+  }
+
+  &__submit-success {
+    color: v.$blue-primary-500;
+    visibility: hidden;
+    &--visible {
+      visibility: visible;
+    }
+  }
+
   &__error {
     display: none;
     flex-direction: column;

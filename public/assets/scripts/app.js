@@ -101,6 +101,11 @@ const DIARY_APP = (function () {
   var accountPasswordInput = document.getElementById("password");
   var accountPasswordConfirmInput = document.getElementById("password-confirm");
   var accountPasswordErr = document.getElementById("password-error");
+  var accountSubmitButtons = document.querySelectorAll(".js-acct-update");
+  var nameSubmitButton = document.getElementById("name-submit");
+  var emailSubmitButton = document.getElementById("email-submit");
+  var passwordSubmitButton = document.getElementById("password-submit");
+  var successIcons = document.querySelectorAll(".c-form__submit-success");
 
   var activeEntryMenu = null;
   var scrollPosition = null;
@@ -120,9 +125,9 @@ const DIARY_APP = (function () {
       acctProfileThumb.src = data.user.image;
       accountImageChange.src = data.user.image;
       acctFirstNameEl.innerText = data.user.firstName;
-      accountFirstNameInput.value = data.user.firstName;
-      accountLastNameInput.value = data.user.lastName;
-      accountEmailInput.value = data.user.email;
+      accountFirstNameInput.defaultValue = data.user.firstName;
+      accountLastNameInput.defaultValue = data.user.lastName;
+      accountEmailInput.defaultValue = data.user.email;
       acctLastNameEl.innerText = data.user.lastName;
       initializeClock();
       setInterval(updateClock, 1000);
@@ -144,6 +149,7 @@ const DIARY_APP = (function () {
       });
   }
 
+  //generals funcs
   function initializeClock() {
     let date = `${
       MONTHS_LONG[currentDate.getMonth()]
@@ -307,34 +313,38 @@ const DIARY_APP = (function () {
     }
   }
 
-  function closeEditor() {
-    let parentContainer = this.parentNode.parentNode;
-    // console.log(parentContainer);
-    switch (parentContainer.id) {
-      case "image-uploader":
-        closeImageUploader();
-        break;
-      case "text-editor":
-        closeTextEditor();
-        break;
-      default:
-        break;
+  async function fetchJson(
+    link,
+    method,
+    credentials = null,
+    body = null,
+    headers = null
+  ) {
+    let response = null;
+
+    if (body && credentials && headers) {
+      response = await fetch(link, { method, body, credentials, headers });
+    } else if (body && credentials) {
+      response = await fetch(link, { method, body, credentials });
+    } else if (credentials) {
+      response = await fetch(link, { method, credentials });
+    } else {
+      response = await fetch(link, { method });
     }
+
+    const data = await response.json();
+    return data;
   }
 
-  function closeViewer() {
-    let parentContainer = this.parentNode.parentNode;
-    // console.log(parentContainer);
-    switch (parentContainer.id) {
-      case "image-viewer":
-        closeImageViewer();
-        break;
-      case "text-viewer":
-        closeTextViewer();
-        break;
-      default:
-        break;
-    }
+  function bodyScrollSet() {
+    scrollPosition = window.scrollY;
+    document.body.classList.toggle("c-body--no-scroll");
+    document.body.style.top = -scrollPosition + "px";
+  }
+
+  function bodyScrollRevert() {
+    document.body.classList.remove("c-body--no-scroll");
+    window.scrollTo(0, scrollPosition);
   }
 
   function showEntryDropdown(target) {
@@ -386,20 +396,43 @@ const DIARY_APP = (function () {
     parent.classList.remove("l-main__modal--visible");
   }
 
-  function showAccountDisplay() {
-    let parentContainer = accountPopup.parentNode;
-    bodyScrollSet();
-    parentContainer.classList.add("l-main__account--visible");
-    accountPopup.classList.add("c-account--visible");
+  function pasteCatcher(event) {
+    event.preventDefault();
+    let text = event.clipboardData.getData("text/plain");
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    range.deleteContents();
+    let node = document.createTextNode(text);
+    range.insertNode(node);
+
+    selection.collapseToEnd();
+
+    // for(let position = 0; position != text.length; position++)
+    // {
+    //     selection.modify("move", "right", "character");
+    // };
   }
 
-  function closeAccountDisplay() {
-    let parentContainer = accountPopup.parentNode;
-    parentContainer.classList.remove("l-main__account--visible");
-    accountPopup.classList.remove("c-account--visible");
-    bodyScrollRevert();
+  function deleteEntry() {
+    deleteModal.parentNode.classList.add("c-loader");
+    fetchJson(`entries/${toDeleteEntry.id}`, "DELETE", "include").then(
+      (result) => {
+        if (result.success) {
+          let parentList = toDeleteEntry.element.parentNode;
+          toDeleteEntry.element.remove();
+
+          if (parentList.children.length == 0) {
+            parentList.parentNode.remove();
+          }
+        }
+
+        deleteModal.parentNode.classList.remove("c-loader");
+        hideDeleteModal();
+      }
+    );
   }
 
+  //editor funcs
   function showTextEditor(itemId = null) {
     textEditorLabel.innerText = editorOptions.label;
     let parentContainer = textEditor.parentNode;
@@ -418,16 +451,6 @@ const DIARY_APP = (function () {
         textBodyInput.innerText = itemEntry.content;
       });
     }
-  }
-
-  function closeTextEditor() {
-    let parentContainer = textEditor.parentNode;
-    textEditor.querySelectorAll(".js-editor-editable").forEach((editable) => {
-      editable.textContent = "";
-    });
-    parentContainer.classList.remove("l-main__editor--visible");
-    textEditor.classList.remove("c-entry-create--visible");
-    bodyScrollRevert();
   }
 
   function showImageUploader(itemId = null) {
@@ -475,6 +498,39 @@ const DIARY_APP = (function () {
     }
   }
 
+  function editorDone() {
+    if (editorOptions.doneHandler == "new") {
+      submitEntry(this.parentNode.parentNode);
+    } else if (editorOptions.doneHandler == "update") {
+      updateEntry(this.parentNode.parentNode);
+    }
+  }
+
+  function closeEditor() {
+    let parentContainer = this.parentNode.parentNode;
+    // console.log(parentContainer);
+    switch (parentContainer.id) {
+      case "image-uploader":
+        closeImageUploader();
+        break;
+      case "text-editor":
+        closeTextEditor();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function closeTextEditor() {
+    let parentContainer = textEditor.parentNode;
+    textEditor.querySelectorAll(".js-editor-editable").forEach((editable) => {
+      editable.textContent = "";
+    });
+    parentContainer.classList.remove("l-main__editor--visible");
+    textEditor.classList.remove("c-entry-create--visible");
+    bodyScrollRevert();
+  }
+
   function closeImageUploader() {
     let parentContainer = imageUploader.parentNode;
     selectedImages = [];
@@ -488,112 +544,6 @@ const DIARY_APP = (function () {
     document.querySelectorAll(".js-image-preview").forEach((preview) => {
       preview.remove();
     });
-    bodyScrollRevert();
-  }
-
-  function pasteCatcher(event) {
-    event.preventDefault();
-    let text = event.clipboardData.getData("text/plain");
-    let selection = window.getSelection();
-    let range = selection.getRangeAt(0);
-    range.deleteContents();
-    let node = document.createTextNode(text);
-    range.insertNode(node);
-
-    selection.collapseToEnd();
-
-    // for(let position = 0; position != text.length; position++)
-    // {
-    //     selection.modify("move", "right", "character");
-    // };
-  }
-
-  function viewEntry(item) {
-    // let item = item;
-    let itemId = item.getAttribute("data-id");
-    let itemType = item.getAttribute("data-type");
-    let itemDatetime = null;
-    let itemEntry = null;
-
-    bodyScrollSet();
-
-    if (itemType == "text") {
-      textViewer.classList.add("c-loader");
-      showTextViewer();
-    } else {
-      imageViewer.classList.add("c-loader");
-      showImageViewer();
-    }
-
-    fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
-      itemEntry = data.entries[0].dateEntries[0];
-      if (itemEntry.type == "text") {
-        itemDatetime = new Date(itemEntry.time);
-        entryTextTitle.innerText = itemEntry.title;
-        entryTextContent.innerText = itemEntry.content;
-        entryTextDatetime.innerText = `${
-          MONTHS_LONG[itemDatetime.getMonth()]
-        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
-          "en-us",
-          {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          }
-        )}`;
-
-        textViewer.classList.remove("c-loader");
-      } else {
-        imageViewer.classList.add("c-loader");
-        let content = "";
-        itemDatetime = new Date(itemEntry.time);
-        entryImageTitle.innerText = itemEntry.title;
-        // entryImageContent.innerText = itemEntry.content.content;
-        entryImageDatetime.innerText = `${
-          MONTHS_LONG[itemDatetime.getMonth()]
-        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
-          "en-us",
-          {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          }
-        )}`;
-
-        itemEntry.content.forEach((img) => {
-          content += `<li class="c-viewer__gallery-item"><img
-          src="${img.url}"
-          alt="entry image"
-          class="c-viewer__gallery-image"/></li>`;
-        });
-
-        entryImageContent.innerHTML = content;
-        imageViewer.classList.remove("c-loader");
-      }
-    });
-  }
-
-  function showTextViewer() {
-    textViewer.parentNode.classList.add("l-main__viewer--visible");
-    textViewer.classList.add("c-viewer--visible");
-  }
-
-  function showImageViewer() {
-    imageViewer.parentNode.classList.add("l-main__viewer--visible");
-    imageViewer.classList.add("c-viewer--visible");
-  }
-
-  function closeTextViewer() {
-    textViewer.parentNode.classList.remove("l-main__viewer--visible");
-    textViewer.classList.remove("c-viewer--visible");
-    textViewer.classList.remove("c-loader");
-    bodyScrollRevert();
-  }
-
-  function closeImageViewer() {
-    imageViewer.parentNode.classList.remove("l-main__viewer--visible");
-    imageViewer.classList.remove("c-viewer--visible");
-    imageViewer.classList.remove("c-loader");
     bodyScrollRevert();
   }
 
@@ -640,14 +590,6 @@ const DIARY_APP = (function () {
     }
   }
 
-  function editorDone() {
-    if (editorOptions.doneHandler == "new") {
-      submitEntry(this.parentNode.parentNode);
-    } else if (editorOptions.doneHandler == "update") {
-      updateEntry(this.parentNode.parentNode);
-    }
-  }
-
   function submitEntry(editor) {
     let formData = new FormData();
     let headers = null;
@@ -670,7 +612,8 @@ const DIARY_APP = (function () {
       fetchJson("/entries", "POST", "include", body, headers)
         .then((result) => {
           if (result.success) {
-            editor.parenNode.classList.remove("c-loader");
+            console.log("suc");
+            editor.parentNode.classList.remove("c-loader");
             createEntryElement(result.entryId);
             closeTextEditor();
           }
@@ -747,8 +690,6 @@ const DIARY_APP = (function () {
         newItem = new DOMParser()
           .parseFromString(generateEntries(data), "text/html")
           .body.querySelector(".c-entries__on-date");
-
-        console.log(newItem);
 
         mainList.prepend(newItem);
         gsapDatePins();
@@ -883,23 +824,137 @@ const DIARY_APP = (function () {
     });
   }
 
-  function deleteEntry() {
-    deleteModal.parentNode.classList.add("c-loader");
-    fetchJson(`entries/${toDeleteEntry.id}`, "DELETE", "include").then(
-      (result) => {
-        if (result.success) {
-          let parentList = toDeleteEntry.element.parentNode;
-          toDeleteEntry.element.remove();
+  //viewer funcs
+  function viewEntry(item) {
+    // let item = item;
+    let itemId = item.getAttribute("data-id");
+    let itemType = item.getAttribute("data-type");
+    let itemDatetime = null;
+    let itemEntry = null;
 
-          if (parentList.children.length == 0) {
-            parentList.parentNode.remove();
+    bodyScrollSet();
+
+    if (itemType == "text") {
+      textViewer.classList.add("c-loader");
+      showTextViewer();
+    } else {
+      imageViewer.classList.add("c-loader");
+      showImageViewer();
+    }
+
+    fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
+      itemEntry = data.entries[0].dateEntries[0];
+      if (itemEntry.type == "text") {
+        itemDatetime = new Date(itemEntry.time);
+        entryTextTitle.innerText = itemEntry.title;
+        entryTextContent.innerText = itemEntry.content;
+        entryTextDatetime.innerText = `${
+          MONTHS_LONG[itemDatetime.getMonth()]
+        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+          "en-us",
+          {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
           }
-        }
+        )}`;
 
-        deleteModal.parentNode.classList.remove("c-loader");
-        hideDeleteModal();
+        textViewer.classList.remove("c-loader");
+      } else {
+        imageViewer.classList.add("c-loader");
+        let content = "";
+        itemDatetime = new Date(itemEntry.time);
+        entryImageTitle.innerText = itemEntry.title;
+        // entryImageContent.innerText = itemEntry.content.content;
+        entryImageDatetime.innerText = `${
+          MONTHS_LONG[itemDatetime.getMonth()]
+        } ${itemDatetime.getDate()}, ${itemDatetime.getFullYear()} at ${itemDatetime.toLocaleTimeString(
+          "en-us",
+          {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          }
+        )}`;
+
+        itemEntry.content.forEach((img) => {
+          content += `<li class="c-viewer__gallery-item"><img
+          src="${img.url}"
+          loading="lazy"
+          alt="entry image"
+          class="c-viewer__gallery-image"/></li>`;
+        });
+
+        entryImageContent.innerHTML = content;
+        imageViewer.classList.remove("c-loader");
       }
-    );
+    });
+  }
+
+  function showTextViewer() {
+    textViewer.parentNode.classList.add("l-main__viewer--visible");
+    textViewer.classList.add("c-viewer--visible");
+  }
+
+  function showImageViewer() {
+    imageViewer.parentNode.classList.add("l-main__viewer--visible");
+    imageViewer.classList.add("c-viewer--visible");
+  }
+
+  function closeViewer() {
+    let parentContainer = this.parentNode.parentNode;
+    // console.log(parentContainer);
+    switch (parentContainer.id) {
+      case "image-viewer":
+        closeImageViewer();
+        break;
+      case "text-viewer":
+        closeTextViewer();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function closeTextViewer() {
+    textViewer.parentNode.classList.remove("l-main__viewer--visible");
+    textViewer.classList.remove("c-viewer--visible");
+    textViewer.classList.remove("c-loader");
+    bodyScrollRevert();
+  }
+
+  function closeImageViewer() {
+    imageViewer.parentNode.classList.remove("l-main__viewer--visible");
+    imageViewer.classList.remove("c-viewer--visible");
+    imageViewer.classList.remove("c-loader");
+    bodyScrollRevert();
+  }
+
+  //account
+  function showAccountDisplay() {
+    let parentContainer = accountPopup.parentNode;
+    bodyScrollSet();
+    parentContainer.classList.add("l-main__account--visible");
+    accountPopup.classList.add("c-account--visible");
+  }
+
+  function closeAccountDisplay() {
+    let parentContainer = accountPopup.parentNode;
+    parentContainer.classList.remove("l-main__account--visible");
+    accountPopup.classList.remove("c-account--visible");
+    bodyScrollRevert();
+
+    accountForms.forEach((form) => {
+      form.reset();
+    });
+
+    successIcons.forEach((icons) => {
+      icons.classList.remove("c-form__submit-success--visible");
+    });
+
+    accountSubmitButtons.forEach((button) => {
+      button.disabled = true;
+    });
   }
 
   function accountFormSubmit(event) {
@@ -914,20 +969,30 @@ const DIARY_APP = (function () {
 
     let jsonBody = {};
     formData.forEach((value, key) => {
-      if (key !== "password-re-enter") {
+      if (key !== "passwordConfirm") {
         jsonBody[key] = value;
       }
     });
     let body = JSON.stringify(jsonBody);
 
     console.log(body);
+    let submitButton = this.querySelector(".c-button");
+    let indicator = this.querySelector(".c-form__indicator");
+    let successMarker = this.querySelector(".c-form__submit-success");
+
+    successMarker.classList.remove("c-form__submit-success--visible");
+
+    submitButton.disabled = true;
+    indicator.classList.add("c-loader-plain");
 
     if (formName == "name-form") {
       fetchJson("/users/name", method, "include", body, headers)
         .then((result) => {
           if (result.success) {
-            accountFirstNameInput.value = jsonBody.firstName;
-            accountLastNameInput.value = jsonBody.lastName;
+            indicator.classList.remove("c-loader-plain");
+            successMarker.classList.add("c-form__submit-success--visible");
+            accountFirstNameInput.defaultValue = jsonBody.firstName;
+            accountLastNameInput.defaultValue = jsonBody.lastName;
             welcomeNameEl.innerText = jsonBody.firstName;
             acctFirstNameEl.innerText = jsonBody.firstName;
             acctLastNameEl.innerText = jsonBody.lastName;
@@ -942,8 +1007,11 @@ const DIARY_APP = (function () {
       fetchJson("/users/email", method, "include", body, headers).then(
         (result) => {
           if (result.success) {
-            accountEmailInput.value = jsonBody.email;
+            accountEmailInput.defaultValue = jsonBody.email;
+            indicator.classList.remove("c-loader-plain");
+            successMarker.classList.add("c-form__submit-success--visible");
           } else {
+            indicator.classList.remove("c-loader-plain");
             accountEmailInput.classList.add("c-form__input--border-red");
             accountEmailErr.classList.add("c-form__error--visible");
           }
@@ -954,51 +1022,21 @@ const DIARY_APP = (function () {
       accountPasswordConfirmInput.classList.remove("c-form__input--border-red");
       accountPasswordErr.classList.remove("c-form__error--visible");
       if (accountPasswordInput.value == accountPasswordConfirmInput.value) {
-        fetchJson("/users/password", method, "include", jsonBody, headers)
-          .then((result) => {})
+        fetchJson("/users/password", method, "include", body, headers)
+          .then((result) => {
+            indicator.classList.remove("c-loader-plain");
+            successMarker.classList.add("c-form__submit-success--visible");
+          })
           .catch((err) => {
             console.log(err);
           });
       } else {
+        indicator.classList.remove("c-loader-plain");
         accountPasswordInput.classList.add("c-form__input--border-red-normal");
         accountPasswordConfirmInput.classList.add("c-form__input--border-red");
         accountPasswordErr.classList.add("c-form__error--visible");
       }
     }
-  }
-
-  async function fetchJson(
-    link,
-    method,
-    credentials = null,
-    body = null,
-    headers = null
-  ) {
-    let response = null;
-
-    if (body && credentials && headers) {
-      response = await fetch(link, { method, body, credentials, headers });
-    } else if (body && credentials) {
-      response = await fetch(link, { method, body, credentials });
-    } else if (credentials) {
-      response = await fetch(link, { method, credentials });
-    } else {
-      response = await fetch(link, { method });
-    }
-
-    const data = await response.json();
-    return data;
-  }
-
-  function bodyScrollSet() {
-    scrollPosition = window.scrollY;
-    document.body.classList.toggle("c-body--no-scroll");
-    document.body.style.top = -scrollPosition + "px";
-  }
-
-  function bodyScrollRevert() {
-    document.body.classList.remove("c-body--no-scroll");
-    window.scrollTo(0, scrollPosition);
   }
 
   function addListeners() {
@@ -1029,7 +1067,20 @@ const DIARY_APP = (function () {
     });
     accountButton.addEventListener("click", showAccountDisplay);
     deleteButton.addEventListener("click", deleteEntry);
-    // imageAddButton.addEventListener("click", showImageUploader);
-    // textAddButton.addEventListener("click", showTextEditor);
+    accountFirstNameInput.addEventListener("input", () => {
+      nameSubmitButton.disabled = false;
+    });
+    accountLastNameInput.addEventListener("input", () => {
+      nameSubmitButton.disabled = false;
+    });
+    accountEmailInput.addEventListener("input", () => {
+      emailSubmitButton.disabled = false;
+    });
+    accountPasswordInput.addEventListener("input", () => {
+      passwordSubmitButton.disabled = false;
+    });
+    accountPasswordConfirmInput.addEventListener("input", () => {
+      passwordSubmitButton.disabled = false;
+    });
   }
 })();
