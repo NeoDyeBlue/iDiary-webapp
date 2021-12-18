@@ -191,10 +191,9 @@ async function create_image(userId, req) {
 async function update(userId, req) {
   let final = { success: false };
   try {
+    let deletePromises = [];
     let query = `UPDATE entry SET EntryTitle = ?, EntryContent = ? WHERE EntryId = ${req.params.entry} AND EntryUserID = ${userId}`;
-    console.log(req.fields.type);
     if (req.fields.type == "text") {
-      console.log("text");
       await db
         .execute(query, [
           req.fields.title,
@@ -219,25 +218,43 @@ async function update(userId, req) {
           public_ids.push(img.id);
         });
 
-        await cloudinary.api
-          .delete_resources([public_ids])
+        public_ids.forEach((id) => {
+          deletePromises.push(
+            cloudinary.uploader
+              .destroy(id)
+              .then((result) => {
+                console.log(result);
+              })
+              .catch((error) => console.log(error))
+          );
+        });
+
+        await Promise.all(deletePromises)
           .then((result) => {
             console.log(result);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // await cloudinary.uploader
+        //   .destroy(public_ids[0])
+        //   .then((result) => {
+        //     console.log(result);
+        //   })
+        //   .catch((error) => console.log(error));
       }
 
-      // console.log(files, req.files);
+      // console.log();
       //new
-      if (req.files) {
+      if (Object.entries(req.files).length) {
         await upload_images(userId, req.files).then((result) => {
           uploadContent = result;
+          uploadContent.forEach((content) => {
+            keep.push(content);
+          });
         });
       }
-
-      uploadContent.forEach((content) => {
-        keep.push(content);
-      });
 
       await db
         .execute(query, [req.fields.title, JSON.stringify({ content: keep })])
@@ -258,6 +275,7 @@ async function update(userId, req) {
 async function delete_entry(userId, req) {
   let final = { success: false };
   try {
+    let deletePromises = [];
     let typeContentQuery = `SELECT ContentType, EntryContent FROM entry WHERE EntryID = ${req.params.entry} AND EntryUserID = ${userId}`;
     let deleteQuery = `DELETE FROM entry WHERE EntryID = ${req.params.entry} AND EntryUserID = ${userId}`;
     let typeContent = { type: null, content: null };
@@ -267,19 +285,37 @@ async function delete_entry(userId, req) {
       typeContent.type = data[0].ContentType;
       typeContent.content = data[0].EntryContent;
     });
-
+    // console.log(typeContent.content);
     if (typeContent.type == "image") {
       let public_ids = [];
       JSON.parse(typeContent.content).content.forEach((img) => {
         public_ids.push(img.id);
       });
 
-      await cloudinary.api
-        .delete_resources([public_ids])
+      public_ids.forEach((id) => {
+        deletePromises.push(
+          cloudinary.uploader
+            .destroy(id)
+            .then((result) => {
+              console.log(result);
+            })
+            .catch((error) => console.log(error))
+        );
+      });
+
+      await Promise.all(deletePromises)
         .then((result) => {
-          final.cloudinary_result = result;
+          console.log(result);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.log(error);
+        });
+      // await cloudinary.api
+      //   .delete_resources([public_ids])
+      //   .then((result) => {
+      //     final.cloudinary_result = result;
+      //   })
+      //   .catch((error) => console.log(error));
     }
 
     await db

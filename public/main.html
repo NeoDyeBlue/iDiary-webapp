@@ -385,7 +385,7 @@
           </div>
           <div class="c-account__main-wrap">
             <div class="c-account__info">
-              <label for="image" class="c-account__choose-photo">
+              <label for="acct-image-upload" class="c-account__choose-photo">
                 <img
                   src=""
                   alt="account image"
@@ -489,6 +489,7 @@
                     type="password"
                     id="password"
                     name="password"
+                    minlength="8"
                     required
                     autocomplete="off"
                     placeholder="New Password"
@@ -500,6 +501,7 @@
                     type="password"
                     id="password-confirm"
                     name="passwordConfirm"
+                    minlength="8"
                     required
                     autocomplete="off"
                     placeholder="Re-Enter New Password"
@@ -521,13 +523,13 @@
             <div class="c-account__more-wrap">
               <a href="/users/logout" class="c-button">Sign Out</a>
             </div>
-            <div
+            <!-- <div
               class="c-account__more-wrap c-account__more-wrap--margin-bottom"
             >
               <button class="c-button c-button--text-only c-button--text-red">
                 Delete Account
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

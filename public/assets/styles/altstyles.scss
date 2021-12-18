@@ -24,22 +24,19 @@
   grid-template-rows: auto 1fr;
   // padding: v.$fluid-pad-mar v.$fluid-pad-mar 0 v.$fluid-pad-mar;
   min-height: 100%;
-  max-height: 100%;
-  overflow: auto;
-  overflow-anchor: auto;
   position: relative;
-  // overflow: hidden;
+  //   overflow: hidden;
 
   &__sidebar {
     grid-column: 1 / -1;
     align-self: flex-start;
     z-index: 1;
     @media screen and (min-width: v.$laptop) {
-      height: 100vh;
+      height: 100%;
       grid-column: 1 / 4;
       max-width: 280px;
       min-width: 150px;
-      min-height: 600px;
+      //   min-height: 600px;
       position: sticky;
       top: 0;
       // overflow-y: scroll;
@@ -61,11 +58,12 @@
     grid-column: 1 / -1;
     z-index: 1;
     // width: 100%;
-    // height: 100%;
+    height: 100%;
     @media screen and (min-width: v.$laptop) {
-      // overflow: scroll;
-      grid-column: 4 / 11;
+      overflow: auto;
+      grid-column: 4 / -1;
       grid-row: 2 / 4;
+      max-height: 100%;
     }
   }
 
@@ -145,7 +143,7 @@
   }
 
   &__nav {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     right: 0;
     grid-column: 1 / -1;
@@ -156,18 +154,10 @@
       // top: 30%;
       // transform: translateY(-50%);
       // top: 50%;
-      height: 100vh;
-      align-self: flex-start;
-      position: sticky;
-      grid-row: 2 / 4;
+      grid-row: 2 / 3;
       // position: sticky;
-      // bottom: 0;
-      top: 0;
-      // right: 0;
+      bottom: 0;
       grid-column: 11 / -1;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
       // align-self: flex-start;
     }
   }
@@ -313,7 +303,7 @@
   @media screen and (min-width: v.$laptop) {
     width: 100%;
     height: 100%;
-    min-height: 600px;
+    // min-height: 600px;
   }
 }
 
@@ -370,7 +360,6 @@
   @media screen and (min-width: v.$laptop) {
     align-items: center;
     justify-content: center;
-    // min-height: 100%;
   }
 }
 
@@ -433,14 +422,16 @@
 }
 
 .c-entries {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  //   flex-direction: column;
+  //   justify-content: flex-start;
+  //   align-items: flex-start;
   padding: v.$fluid-pad-mar;
   // border-top: 1px solid v.$neutral-700;
 
   &__list {
+    grid-column: 1 / 8;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -478,7 +469,6 @@
     align-items: center;
     align-self: flex-start;
     padding: v.$fluid-pad-mar 0;
-    pointer-events: none;
     // margin-left: v.$fluid-pad-mar;
     // text-shadow: v.$short-shadow-neutral-600;
 
@@ -656,7 +646,7 @@
     }
   }
 
-  &__title-wrap {
+  &__title-time {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -681,7 +671,7 @@
   &__content-wrap {
     pointer-events: none;
     display: block;
-    height: 100%;
+    // height: 100%;
 
     &--text {
       // max-height: 100px;
@@ -703,11 +693,6 @@
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       }
     }
-  }
-
-  &__time-wrap {
-    padding-top: 1.5rem;
-    margin-top: auto;
   }
 
   &__text {
@@ -751,7 +736,7 @@
     // border-right: 2px solid v.$neutral-800;
     // border-left: 2px solid v.$neutral-700;
     // border-right: 2px solid v.$neutral-700;
-    padding: v.$fluid-pad-mar 0 v.$fluid-pad-mar v.$fluid-pad-mar;
+    padding: v.$fluid-pad-mar;
   }
 }
 
@@ -939,38 +924,17 @@
     display: flex;
     flex-direction: column;
     overflow-anchor: auto;
-    // line-height: 0;
-    // column-count: 3;
-    // column-gap: 0;
   }
 
   &__gallery-item {
     position: relative;
     width: 100%;
     height: 100%;
-    // padding: 0.25rem;
-
-    // &::before {
-    //   content: "";
-    //   display: block;
-    //   padding-top: 100%;
-    // }
-    // aspect-ratio: 1;
   }
 
   &__gallery-image {
-    // width: 100%;
-    // height: 100%;
-    // object-fit: cover;
-    // position: absolute;
-    // height: auto;
-    // width: 100%;
     width: 100%;
-    // max-width: 400px;
     height: auto;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
   }
 }
 

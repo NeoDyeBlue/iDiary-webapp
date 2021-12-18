@@ -93,6 +93,8 @@ const DIARY_APP = (function () {
     element: null,
   };
   //account accountForms
+  var accountImageDefault = null;
+  var accountImageInput = document.getElementById("acct-image-upload");
   var accountForms = document.querySelectorAll(".c-form");
   var accountFirstNameInput = document.getElementById("first-name");
   var accountLastNameInput = document.getElementById("last-name");
@@ -122,6 +124,7 @@ const DIARY_APP = (function () {
   function init() {
     fetchJson("/entries/all", "GET", "include").then((data) => {
       welcomeNameEl.innerText = data.user.firstName;
+      accountImageDefault = data.user.image;
       acctProfileThumb.src = data.user.image;
       accountImageChange.src = data.user.image;
       acctFirstNameEl.innerText = data.user.firstName;
@@ -192,15 +195,52 @@ const DIARY_APP = (function () {
 
   function gsapDatePins() {
     let dateIndicator = document.querySelectorAll(".c-entries__date-indicator");
-    gsap.utils.toArray(dateIndicator).forEach((indicator, index) => {
+    // gsap.utils.toArray(dateIndicator).forEach((indicator, index) => {
+    //   ScrollTrigger.create({
+    //     trigger: indicator.parentNode,
+    //     start: "top top",
+    //     end: "bottom 10%",
+    //     onEnter: () => {
+    //       indicator.classList.add("c-entries__date-indicator--pin");
+    //     },
+    //   });
+    // });
+    gsap.utils.toArray(dateIndicator).forEach((indicator) => {
       ScrollTrigger.create({
-        trigger: indicator.parentNode,
+        trigger: indicator,
+        scroller: ".l-main",
         start: "top top",
-        end: "bottom 10%",
-        onEnter: () => {
-          indicator.classList.add("c-entries__date-indicator--pin");
-        },
+        endTrigger: indicator.parentNode,
+        end: "bottom 20%",
+        // markers: true,
+        pinSpacing: false,
+        pinType: "fixed",
+        pin: true,
       });
+    });
+  }
+
+  function gsapDatePinSingle(indicator) {
+    // gsap.utils.toArray(dateIndicator).forEach((indicator, index) => {
+    //   ScrollTrigger.create({
+    //     trigger: indicator.parentNode,
+    //     start: "top top",
+    //     end: "bottom 10%",
+    //     onEnter: () => {
+    //       indicator.classList.add("c-entries__date-indicator--pin");
+    //     },
+    //   });
+    // });
+    ScrollTrigger.create({
+      trigger: indicator,
+      scroller: ".l-main",
+      start: "top top",
+      endTrigger: indicator.parentNode,
+      end: "bottom 20%",
+      // markers: true,
+      pinSpacing: false,
+      pinType: "fixed",
+      pin: true,
     });
   }
 
@@ -383,14 +423,14 @@ const DIARY_APP = (function () {
   }
 
   function showDeleteModal() {
-    bodyScrollSet();
+    // bodyScrollSet();
     let parent = deleteModal.parentNode;
     deleteModal.classList.add("c-modal--visible");
     parent.classList.add("l-main__modal--visible");
   }
 
   function hideDeleteModal() {
-    bodyScrollRevert();
+    // bodyScrollRevert();
     let parent = deleteModal.parentNode;
     deleteModal.classList.remove("c-modal--visible");
     parent.classList.remove("l-main__modal--visible");
@@ -424,6 +464,8 @@ const DIARY_APP = (function () {
           if (parentList.children.length == 0) {
             parentList.parentNode.remove();
           }
+
+          ScrollTrigger.refresh();
         }
 
         deleteModal.parentNode.classList.remove("c-loader");
@@ -436,16 +478,18 @@ const DIARY_APP = (function () {
   function showTextEditor(itemId = null) {
     textEditorLabel.innerText = editorOptions.label;
     let parentContainer = textEditor.parentNode;
-    bodyScrollSet();
+    // bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     textEditor.classList.add("c-entry-create--visible");
     hideMenu();
 
     if (itemId) {
       editorOptions.updateId = itemId;
-      textEditor.classList.add("c-loader");
+      // textEditor.classList.add("c-loader");
+      textEditor.parentNode.classList.add("c-loader");
       fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
-        textEditor.classList.remove("c-loader");
+        // textEditor.classList.remove("c-loader");
+        textEditor.parentNode.classList.remove("c-loader");
         let itemEntry = data.entries[0].dateEntries[0];
         textTitleInput.innerText = itemEntry.title;
         textBodyInput.innerText = itemEntry.content;
@@ -456,17 +500,19 @@ const DIARY_APP = (function () {
   function showImageUploader(itemId = null) {
     imageUploadeLabel.innerText = editorOptions.label;
     let parentContainer = imageUploader.parentNode;
-    bodyScrollSet();
+    // bodyScrollSet();
     parentContainer.classList.add("l-main__editor--visible");
     imageUploader.classList.add("c-entry-create--visible");
     hideMenu();
 
     if (itemId) {
-      console.log("called");
       editorOptions.updateId = itemId;
-      imageUploader.classList.add("c-loader");
+      // imageUploader.classList.add("c-loader");
+      imageUploader.parentNode.classList.add("c-loader");
       fetchJson(`/entries/${itemId}`, "GET", "include").then((data) => {
-        imageUploader.classList.remove("c-loader");
+        console.log("called");
+        // imageUploader.classList.remove("c-loader");
+        imageUploader.parentNode.classList.remove("c-loader");
         let itemEntry = data.entries[0].dateEntries[0];
         albumTitleInput.innerText = itemEntry.title;
 
@@ -528,7 +574,7 @@ const DIARY_APP = (function () {
     });
     parentContainer.classList.remove("l-main__editor--visible");
     textEditor.classList.remove("c-entry-create--visible");
-    bodyScrollRevert();
+    // bodyScrollRevert();
   }
 
   function closeImageUploader() {
@@ -544,7 +590,7 @@ const DIARY_APP = (function () {
     document.querySelectorAll(".js-image-preview").forEach((preview) => {
       preview.remove();
     });
-    bodyScrollRevert();
+    // bodyScrollRevert();
   }
 
   function previewImages() {
@@ -571,8 +617,6 @@ const DIARY_APP = (function () {
     if (selectedImages) {
       imageSubmitButton.disabled = false;
     }
-
-    console.log(selectedImages);
   }
 
   function removeSelectedImage(target) {
@@ -612,7 +656,6 @@ const DIARY_APP = (function () {
       fetchJson("/entries", "POST", "include", body, headers)
         .then((result) => {
           if (result.success) {
-            console.log("suc");
             editor.parentNode.classList.remove("c-loader");
             createEntryElement(result.entryId);
             closeTextEditor();
@@ -622,7 +665,6 @@ const DIARY_APP = (function () {
           console.log(err);
         });
     } else {
-      console.log(editor);
       formData.append("type", "image");
       formData.append(
         "title",
@@ -647,7 +689,6 @@ const DIARY_APP = (function () {
         console.log(result);
         if (result.success) {
           createEntryElement(result.entryId);
-          editor.parentNode.classList.remove("c-loader");
           closeImageUploader();
         }
       });
@@ -678,13 +719,18 @@ const DIARY_APP = (function () {
           firstListItem
             .querySelector(".c-entries__date-entries")
             .prepend(newItem);
+
+          ScrollTrigger.refresh();
         } else {
           newItem = new DOMParser()
             .parseFromString(generateEntries(data), "text/html")
             .body.querySelector(".c-entries__on-date");
 
           mainList.prepend(newItem);
-          gsapDatePins();
+          gsapDatePinSingle(
+            newItem.querySelector(".c-entries__date-indicator")
+          );
+          ScrollTrigger.refresh();
         }
       } else {
         newItem = new DOMParser()
@@ -692,7 +738,8 @@ const DIARY_APP = (function () {
           .body.querySelector(".c-entries__on-date");
 
         mainList.prepend(newItem);
-        gsapDatePins();
+        gsapDatePin(newItem.querySelector(".c-entries__date-indicator"));
+        ScrollTrigger.refresh();
       }
     });
   }
@@ -798,27 +845,44 @@ const DIARY_APP = (function () {
         element.querySelector(".js-entry-click").innerText = itemEntry.title;
         element.querySelector(".js-text-content").innerText = snippet;
         textEditor.parentNode.classList.remove("c-loader");
+        ScrollTrigger.refresh();
         closeTextEditor();
       } else if (itemEntry.type == "image") {
         element.querySelector(".js-entry-click").innerText = itemEntry.title;
         let content = "";
         let imageContentWrap = element.querySelector(".js-album-preview");
-        itemEntry.content.slice(0, 3).forEach((img) => {
-          content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+        if (itemEntry.content.length > 4) {
+          let excess = itemEntry.content.length - 4;
+          itemEntry.content.slice(0, 3).forEach((img) => {
+            content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+              src="${img.url}"
+              alt="entry image"
+              loading="lazy"
+              class="c-entries__image"/></div>`;
+          });
+          content += `
+          <div class="c-entries__image-wrap">
+          <img
+            src="${itemEntry.content[3].url}"
+            alt="entry image"
+            loading="lazy"
+            class="c-entries__image"/>
+          <p class="c-text c-text--neutral-300 c-text--large c-text--absolute c-text--white c-text--center">+${excess} more</p>
+          </div>`;
+        } else {
+          itemEntry.content.slice(0, 4).forEach((img) => {
+            content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
             src="${img.url}"
             alt="entry image"
+            loading="lazy"
             class="c-entries__image"/></div>`;
-        });
-        if (itemEntry.content.length > 3) {
-          let excess = itemEntry.content.length - 3;
-          content += `<div class="c-entries__image-wrap">
-          <p class="c-text c-text--neutral-300 c-text--large c-text--absolute">+${excess} more</p>
-          </div>`;
+          });
         }
 
         imageContentWrap.innerHTML = content;
 
         imageUploader.parentNode.classList.remove("c-loader");
+        ScrollTrigger.refresh();
         closeImageUploader();
       }
     });
@@ -832,7 +896,7 @@ const DIARY_APP = (function () {
     let itemDatetime = null;
     let itemEntry = null;
 
-    bodyScrollSet();
+    // bodyScrollSet();
 
     if (itemType == "text") {
       textViewer.classList.add("c-loader");
@@ -920,20 +984,20 @@ const DIARY_APP = (function () {
     textViewer.parentNode.classList.remove("l-main__viewer--visible");
     textViewer.classList.remove("c-viewer--visible");
     textViewer.classList.remove("c-loader");
-    bodyScrollRevert();
+    // bodyScrollRevert();
   }
 
   function closeImageViewer() {
     imageViewer.parentNode.classList.remove("l-main__viewer--visible");
     imageViewer.classList.remove("c-viewer--visible");
     imageViewer.classList.remove("c-loader");
-    bodyScrollRevert();
+    // bodyScrollRevert();
   }
 
   //account
   function showAccountDisplay() {
     let parentContainer = accountPopup.parentNode;
-    bodyScrollSet();
+    // bodyScrollSet();
     parentContainer.classList.add("l-main__account--visible");
     accountPopup.classList.add("c-account--visible");
   }
@@ -942,7 +1006,13 @@ const DIARY_APP = (function () {
     let parentContainer = accountPopup.parentNode;
     parentContainer.classList.remove("l-main__account--visible");
     accountPopup.classList.remove("c-account--visible");
-    bodyScrollRevert();
+    // bodyScrollRevert();
+
+    if (accountImageDefault == acctProfileThumb.src) {
+      accountImageChange.src = accountImageDefault;
+    } else {
+      accountImageDefault = acctProfileThumb.src;
+    }
 
     accountForms.forEach((form) => {
       form.reset();
@@ -955,6 +1025,30 @@ const DIARY_APP = (function () {
     accountSubmitButtons.forEach((button) => {
       button.disabled = true;
     });
+  }
+
+  function changeAccountImage() {
+    let image = this.files[0];
+
+    if (image) {
+      let formData = new FormData();
+      accountImageChange.src = URL.createObjectURL(image);
+      accountImageChange.parentNode.classList.add("c-loader");
+
+      formData.append("image", image);
+
+      fetchJson("/users/photo", "POST", "include", formData)
+        .then((result) => {
+          if (result.success) {
+            accountImageChange.src = result.imageUrl;
+            acctProfileThumb.src = result.imageUrl;
+            accountImageChange.parentNode.classList.remove("c-loader");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   function accountFormSubmit(event) {
@@ -1070,6 +1164,7 @@ const DIARY_APP = (function () {
     accountFirstNameInput.addEventListener("input", () => {
       nameSubmitButton.disabled = false;
     });
+    accountImageInput.addEventListener("change", changeAccountImage);
     accountLastNameInput.addEventListener("input", () => {
       nameSubmitButton.disabled = false;
     });

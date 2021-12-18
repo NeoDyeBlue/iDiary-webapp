@@ -77,18 +77,11 @@ function createDateEntries(data) {
         </li>
         </ul>
       </div>
-        <div class="c-entries__title-time">
+        <div class="c-entries__title-wrap">
           <h2 data-id="${entry.entryId}" data-type="${
         entry.type
       }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">
           ${entry.title}</h2>
-          <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
-            ${new Date(entry.time).toLocaleTimeString("en-us", {
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            })}
-          </p>
         </div>
         <div
         class="
@@ -97,6 +90,13 @@ function createDateEntries(data) {
       >
         ${createContent("text", entry.content)}
       </div>
+      <div class="c-entries__time-wrap"><p class="c-text c-text--small c-text--neutral-600 c-text--bold">
+      ${new Date(entry.time).toLocaleTimeString("en-us", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      })}
+    </p></div>
       </li>`;
     } else {
       listItems += `<li class="c-entries__item">
@@ -132,19 +132,12 @@ function createDateEntries(data) {
           </li>
         </ul>
       </div>
-        <div class="c-entries__title-time">
+        <div class="c-entries__title-wrap">
           <h2 data-id="${entry.entryId}" data-type="${
         entry.type
       }" class="c-header c-header--x-large c-header--break-word c-header--margin-bottom-30 c-header--hoverable js-entry-click">${
         entry.title
       }</h2>
-          <p class="c-text c-text--small c-text--neutral-600 c-text--bold">
-          ${new Date(entry.time).toLocaleTimeString("en-us", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-          })}
-          </p>
         </div>
         <div
           class="
@@ -153,6 +146,13 @@ function createDateEntries(data) {
         >
           ${createContent("image", entry.content)}
         </div>
+        <div class="c-entries__time-wrap"><p class="c-text c-text--small c-text--neutral-600 c-text--bold">
+        ${new Date(entry.time).toLocaleTimeString("en-us", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })}
+      </p></div>
       </li>`;
     }
   });
@@ -174,18 +174,32 @@ function createContent(type, data) {
       ${snippet}
       </p>`;
   } else if (type == "image") {
-    data.slice(0, 3).forEach((img) => {
-      content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+    if (data.length > 4) {
+      let excess = data.length - 4;
+      data.slice(0, 3).forEach((img) => {
+        content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
+          src="${img.url}"
+          alt="entry image"
+          loading="lazy"
+          class="c-entries__image"/></div>`;
+      });
+      content += `
+      <div class="c-entries__image-wrap">
+      <img
+        src="${data[3].url}"
+        alt="entry image"
+        loading="lazy"
+        class="c-entries__image"/>
+      <p class="c-text c-text--neutral-300 c-text--large c-text--absolute c-text--white c-text--center">+${excess} more</p>
+      </div>`;
+    } else {
+      data.slice(0, 4).forEach((img) => {
+        content += `<div data-id="${img.id}" class="c-entries__image-wrap"><img
         src="${img.url}"
         alt="entry image"
         loading="lazy"
         class="c-entries__image"/></div>`;
-    });
-    if (data.length > 3) {
-      let excess = data.length - 3;
-      content += `<div class="c-entries__image-wrap">
-      <p class="c-text c-text--neutral-300 c-text--large c-text--absolute">+${excess} more</p>
-      </div>`;
+      });
     }
   }
   return content;

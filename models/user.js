@@ -5,7 +5,6 @@ const db = require("./database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
-// const res = require("express/lib/response");
 const generator = new AvatarGenerator();
 
 async function create(body) {
@@ -104,7 +103,66 @@ async function read(body) {
   }
 }
 
-async function updatePhoto(userId, req) {}
+async function updatePhoto(userId, req) {
+  let final = { success: false };
+  try {
+    let selectQuery = "SELECT UserImageID FROM user WHERE UserID = ?";
+    let query =
+      "UPDATE user SET UserImageID = ?, UserImage = ? WHERE UserID = ?";
+    let toDeleteImgId = null;
+    let newImageId = null;
+    let newImageUrl = null;
+    let image = req.files.image.path;
+
+    console.log("get old");
+    await db
+      .execute(selectQuery, [userId])
+      .then((result) => {
+        let [data] = result;
+        toDeleteImgId = data[0].UserImageID;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    console.log("destroy old");
+    await cloudinary.uploader
+      .destroy(toDeleteImgId)
+      .then((result) => {
+        final.cloudinary_result = result;
+        console.log("destroyed");
+      })
+      .catch((error) => console.log(error));
+
+    console.log("get new");
+    await cloudinary.uploader
+      .upload(image, {
+        folder: `idiary/users/${userId}`,
+        quality: "auto:low",
+      })
+      .then((result) => {
+        newImageId = result.public_id;
+        newImageUrl = result.url;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    console.log("return new");
+    await db
+      .execute(query, [newImageId, newImageUrl, userId])
+      .then((result) => {
+        final.success = true;
+        final.imageUrl = newImageUrl;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (err) {
+    final.message = "Error while uploading photo";
+  }
+  return final;
+}
 
 async function updateName(userId, body) {
   let final = { success: false };
